@@ -2,7 +2,7 @@ import { PrismaClient } from "@prisma/client";
 import express from "express";
 
 const prisma = new PrismaClient();
-const port: number = 5000;
+const port = process.env.PORT || 5000;
 const app = express();
 
 async function main() {
