@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "seed": "ts-node recovery-api/src/seed.ts",
+    "start": "ts-node recovery-api/src/seed.ts",
     "start:dev": "ts-node-dev --respawn -- recovery-api/src/seed.ts",
     "migrate": "prisma migrate dev",
     "heroku-postbuild": "npm install --prefix recovery-app --dev && npm run build --prefix recovery-app"
