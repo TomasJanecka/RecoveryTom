@@ -6,7 +6,7 @@ let router: Router = express.Router();
 // router.use("/property", property);
 // router.use("/user", user);
 
-router.route("/").get(async (request, response) => {
+router.route("/test").get(async (request, response) => {
   response.status(200).json({ message: "OK" });
 });
 
