@@ -1,0 +1,65 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id    Int     @id
+  email String
+  name  String?
+  body  Body?
+}
+
+model Excercise {
+  id         Int     @id @default(autoincrement())
+  name       String
+  difficulty Int
+  endurance  Boolean @default(false)
+}
+
+model Stretching {
+  id   Int    @id @default(autoincrement())
+  name String
+
+}
+
+model Body {
+  id      Int      @id @default(autoincrement())
+  muscles Muscle[]
+  user    User     @relation(fields: [userId], references: [id])
+  userId  Int
+}
+
+model Muscle {
+  id         String      @id
+  function   String
+  location   MuscleGroup @relation(fields: [locationId], references: [id])
+  locationId Int
+  body       Body        @relation(fields: [bodyId], references: [id])
+  bodyId     Int
+  problem    Problem     @relation(fields: [problemId], references: [id])
+  problemId  Int
+}
+
+model MuscleGroup {
+  id        Int      @id @default(autoincrement())
+  muscles   Muscle[]
+  problems  Problem  @relation(fields: [problemId], references: [id])
+  problemId Int
+}
+
+model Problem {
+  id           Int           @id @default(autoincrement())
+  muscleGroups MuscleGroup[]
+  muscles      Muscle[]
+}
+
+model Product {
+  id    Int    @id @default(autoincrement())
+  name  String
+  price Int
+}

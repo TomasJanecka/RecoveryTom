@@ -4,7 +4,7 @@ import "./App.css";
 import axios from "axios";
 import ReactGA from "react-ga";
 
-const TRACKING_ID = "G-WM9B8LTMQ2"; // TRACKING_ID
+const TRACKING_ID = "G-WM9B8LTMQ2";
 
 function App() {
   useEffect(() => {
