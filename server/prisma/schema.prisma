@@ -8,58 +8,88 @@ datasource db {
 }
 
 model User {
-  id    Int     @id
-  email String
-  name  String?
-  body  Body?
+  id           Int       @id
+  email        String    @db.VarChar(128) @default("")
+  name         String    @db.VarChar(128) @default("")
+  age          Int       @default(0)
+  points       Int       @default(0)
+  picture      String    @db.VarChar(128) @default("")
+  location     String    @db.VarChar(10) @default("")
+  bmr          Int       @default(0)
+  body         Body?
+  comments     Comment[]
+  cookedFood   Food[]    @relation("food_cooked")
+  favoriteFood Food[]    @relation("food_favorite")
 }
 
 model Excercise {
-  id         Int     @id @default(autoincrement())
-  name       String
-  difficulty Int
-  endurance  Boolean @default(false)
+  id         Int           @id @default(autoincrement())
+  type       ExcerciseType
+  name       String        @db.VarChar(30)
+  difficulty Int           @default(0)
+  muscles    String[]
 }
 
-model Stretching {
-  id   Int    @id @default(autoincrement())
-  name String
-
+enum ExcerciseType {
+  STRETCH
+  STRENGTH
+  MASAGE
+  ENDURANCE
 }
 
 model Body {
   id      Int      @id @default(autoincrement())
-  muscles Muscle[]
-  user    User     @relation(fields: [userId], references: [id])
-  userId  Int
+  user    User     @relation(fields: [userID], references: [id])
+  userID  Int
 }
 
-model Muscle {
-  id         String      @id
-  function   String
-  location   MuscleGroup @relation(fields: [locationId], references: [id])
-  locationId Int
-  body       Body        @relation(fields: [bodyId], references: [id])
-  bodyId     Int
-  problem    Problem     @relation(fields: [problemId], references: [id])
-  problemId  Int
-}
 
-model MuscleGroup {
-  id        Int      @id @default(autoincrement())
-  muscles   Muscle[]
-  problems  Problem  @relation(fields: [problemId], references: [id])
-  problemId Int
-}
 
 model Problem {
   id           Int           @id @default(autoincrement())
-  muscleGroups MuscleGroup[]
-  muscles      Muscle[]
+}
+
+model Food {
+  id           Int       @id @default(autoincrement())
+  proteins     Int       @default(0)
+  carbs        Int       @default(0)
+  fats         Int       @default(0)
+  kcal         Int       @default(0)
+  description  String    @db.VarChar(128)
+  photos       Photo[]
+  ingredients  String[]
+  comments     Comment[]
+  cookedBy     User      @relation("food_cooked", fields: [cookedByID], references: [id])
+  cookedByID   Int
+  favoriteBy   User      @relation("food_favorite", fields: [favoriteByID], references: [id])
+  favoriteByID Int
+}
+
+model Photo {
+  id     Int    @id @default(autoincrement())
+  url    String @db.VarChar(128)
+  food   Food   @relation(fields: [foodID], references: [id])
+  foodID Int
+}
+
+model Comment {
+  id     Int         @id @default(autoincrement())
+  text   String      @db.VarChar(128)
+  food   Food        @relation(fields: [foodID], references: [id])
+  foodID Int
+  user   User        @relation(fields: [userID], references: [id])
+  userID Int
+  likes  Int         @default(0)
+  type   CommentType
+}
+
+enum CommentType {
+  EXERCISE
+  FOOD
 }
 
 model Product {
   id    Int    @id @default(autoincrement())
-  name  String
-  price Int
+  name  String @db.VarChar(20)
+  price Int    @default(0)
 }
