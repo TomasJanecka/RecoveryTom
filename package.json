@@ -30,6 +30,7 @@
     "typescript": "^4.3.5"
   },
   "devDependencies": {
+    "@types/passport": "^1.0.7",
     "@types/react-router-dom": "^5.1.8",
     "ts-node-dev": "^1.1.8"
   }

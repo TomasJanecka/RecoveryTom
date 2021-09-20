@@ -1,6 +1,5 @@
-import { Express, Request } from "express";
+import { Express } from "express";
 const express = require("express");
-const router = express.Router();
 const passport = require("passport");
 
 module.exports = (app: Express) => {

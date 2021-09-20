@@ -1,10 +1,11 @@
 import { PrismaClient } from "@prisma/client";
 import express from "express";
 import path from "path";
+import passport from "passport";
+import api from "../api/routes/api";
 
 require("../api/services/passport");
 const cookieSession = require("cookie-session");
-const passport = require("passport");
 const keys = require("../config/keys");
 const app = express();
 const prisma = new PrismaClient();
@@ -20,9 +21,14 @@ async function main() {
   app.use(passport.initialize());
   app.use(passport.session());
 
+  app.listen(port, () => {
+    console.log(`listening on port ${port}`);
+  });
+
   require("../api/routes/authorization")(app);
 
-  console.log(process.env.NODE_ENV);
+  app.use("/api", api);
+
   if (process.env.NODE_ENV === "production") {
     app.use(
       express.static(
@@ -43,11 +49,6 @@ async function main() {
     });
   }
 }
-
-app.listen(port, () => {
-  console.log(`listening on port ${port}`);
-});
-// }
 
 main()
   .catch((e) => {

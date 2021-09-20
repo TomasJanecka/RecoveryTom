@@ -1,13 +1,12 @@
 import { request, response, Router } from "express";
+import post from "../routes/post";
+import user from "../routes/user";
 
 const express = require("express");
 let router: Router = express.Router();
 
-// router.use("/property", property);
-// router.use("/user", user);
-
-router.route("/test").get(async (request, response) => {
-  response.status(200).json({ message: "OK" });
-});
+router.use("/user", user);
+router.use("/create", post);
+router.use("/create", post);
 
 export default router;
