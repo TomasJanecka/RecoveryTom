@@ -1,3 +1,30 @@
+export enum EMuscleCondition {
+  GOOD,
+  WEAK,
+}
+
+export enum EExerciseType {
+  STRETCH,
+  STRENGTH,
+  MASSAGE,
+  ENDURANCE,
+  TEST,
+}
+
+export enum EMuscleGroup {}
+
+export enum EExerciseDifficulty {
+  EASY,
+  MEDIUM,
+  HARD,
+}
+
+export enum ECommentType {
+  EXERCISE,
+  FOOD,
+  COMMENT,
+}
+
 export enum EJoint {
   HEAD,
   NECK,

@@ -1,11 +1,12 @@
-import { EJoint, EMuscleID } from "./enums";
 import {
-  TCommentType,
-  TExerciseDifficulty,
-  TExerciseType,
-  TMuscleCondition,
-  TMuscleGroup,
-} from "./types";
+  EJoint,
+  EMuscleID,
+  EMuscleCondition,
+  EMuscleGroup,
+  EExerciseDifficulty,
+  ECommentType,
+  EExerciseType,
+} from "./enums";
 
 export interface IUser {
   id: string;
@@ -19,56 +20,56 @@ export interface IUser {
   bmr: number;
   signedAt: Date;
   body: IBody;
-  comments: IComments;
+  comments: Array<IComment>;
   cookedFood: Array<IFood>;
   favoriteFood: Array<IFood>;
-  problems: IProblems;
-  favoriteExercises: IExercises;
-  messages: IMessages;
-  products: IProduct;
+  problems: Array<IProblem>;
+  favoriteExercises: Array<IExercise>;
+  messages: Array<IMessage>;
+  products: Array<IProduct>;
 }
 
 export interface IBody {
   userID: string;
-  muscles: IMuscles;
+  muscles: Array<IMuscle>;
 }
 
 export interface IMuscle {
   id: EMuscleID;
   bodyID: String;
-  exercises: IExercises;
-  problems: IProblems;
+  exercises: Array<IExercise>;
+  problems: Array<IProblem>;
   joints: Array<EJoint>;
-  condition: TMuscleCondition;
-  muscleGroups: Array<TMuscleGroup>;
+  condition: EMuscleCondition;
+  muscleGroups: Array<EMuscleGroup>;
 }
 
-interface IProblem {
+export interface IProblem {
   id: number;
   name?: string;
-  users: IUsers;
-  muscleGroups: Array<TMuscleGroup>;
+  users: Array<IUser>;
+  muscleGroups: Array<EMuscleGroup>;
   joints: Array<EJoint>;
-  muscles: IMuscles;
-  comments: IComments;
+  muscles: Array<IMuscle>;
+  comments: Array<IComment>;
   hidden: boolean;
 }
 
 export interface IExercise {
   id: number;
-  type: TExerciseType;
+  type: EExerciseType;
   name: String;
-  difficulty: TExerciseDifficulty;
-  muscles: IMuscles;
-  favoriteByUsers: IUsers;
-  comments: IComments;
-  messages: IMessages;
+  difficulty: EExerciseDifficulty;
+  muscles: Array<IMuscle>;
+  favoriteByUsers: Array<IUser>;
+  comments: Array<IComment>;
+  messages: Array<IMessage>;
 }
 
 export interface IMessage {
   id: number;
   text: string;
-  exercise: IExercises;
+  exercise: Array<IExercise>;
   food: Array<IFood>;
   userID: String;
   createdAt: Date;
@@ -86,46 +87,39 @@ export interface IFood {
   description: string;
   photos: Array<Photo>;
   ingredients: Array<String>;
-  comments: IComments;
-  messages: IMessages;
+  comments: Array<IComment>;
+  messages: Array<IMessage>;
   cookedByID: String;
-  favoriteBy: IUsers;
+  favoriteBy: Array<IUser>;
   createdAt: Date;
   editedAt: Date;
   hidden: boolean;
 }
 
-interface IComment {
+export interface IComment {
   id: number;
   text: string;
-  foodID?: number;
   userID: string;
+  foodID?: number;
   exerciseID?: number;
   problemID?: number;
   likes: number;
-  type: TCommentType;
+  type: ECommentType;
   createdAt: Date;
   editedAt: Date;
   hidden: boolean;
 }
 
-interface Photo {
+export interface Photo {
   id: number;
   url: string;
   foodID: number;
   hidden: boolean;
 }
 
-interface IProduct {
+export interface IProduct {
   id: number;
   userID: string;
   name: string;
   price: number;
 }
-
-interface IExercises extends Array<IExercise> {}
-interface IProblems extends Array<IProblem> {}
-interface IMuscles extends Array<IMuscle> {}
-interface IMessages extends Array<IMessage> {}
-interface IComments extends Array<IComment> {}
-interface IUsers extends Array<IUser> {}
