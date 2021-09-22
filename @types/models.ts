@@ -22,11 +22,26 @@ export interface IUser {
   body: IBody;
   comments: Array<IComment>;
   cookedFood: Array<IFood>;
-  favoriteFood: Array<IFood>;
-  problems: Array<IProblem>;
-  favoriteExercises: Array<IExercise>;
+  favoriteFood: Array<IUserFavFood>;
+  problems: Array<IUserHasProblem>;
+  favoriteExercises: Array<IUserFavExercise>;
   messages: Array<IMessage>;
   products: Array<IProduct>;
+}
+
+export interface IUserFavExercise {
+  userID: string;
+  exerciseID: number;
+}
+
+export interface IUserFavFood {
+  userID: string;
+  foodID: number;
+}
+
+export interface IUserHasProblem {
+  userID: string;
+  problemID: number;
 }
 
 export interface IBody {
@@ -37,17 +52,27 @@ export interface IBody {
 export interface IMuscle {
   id: EMuscleID;
   bodyID: String;
-  exercises: Array<IExercise>;
-  problems: Array<IProblem>;
+  exercises: Array<IMuscleForExercise>;
+  problems: Array<IMuscleHasProblem>;
   joints: Array<EJoint>;
   condition: EMuscleCondition;
   muscleGroups: Array<EMuscleGroup>;
 }
 
+export interface IMuscleForExercise {
+  muscleID: EMuscleID;
+  exerciseID: number;
+}
+
+export interface IMuscleHasProblem {
+  muscleID: EMuscleID;
+  problemID: number;
+}
+
 export interface IProblem {
   id: number;
   name?: string;
-  users: Array<IUser>;
+  users: Array<IUserHasProblem>;
   muscleGroups: Array<EMuscleGroup>;
   joints: Array<EJoint>;
   muscles: Array<IMuscle>;
@@ -56,12 +81,12 @@ export interface IProblem {
 }
 
 export interface IExercise {
-  id: number;
+  id: number | null;
   type: EExerciseType;
   name: String;
   difficulty: EExerciseDifficulty;
-  muscles: Array<IMuscle>;
-  favoriteByUsers: Array<IUser>;
+  muscles: Array<IMuscleForExercise>;
+  favoriteByUsers: Array<IUserFavFood>;
   comments: Array<IComment>;
   messages: Array<IMessage>;
 }
@@ -90,7 +115,7 @@ export interface IFood {
   comments: Array<IComment>;
   messages: Array<IMessage>;
   cookedByID: String;
-  favoriteBy: Array<IUser>;
+  favoriteBy: Array<IUserFavFood>;
   createdAt: Date;
   editedAt: Date;
   hidden: boolean;

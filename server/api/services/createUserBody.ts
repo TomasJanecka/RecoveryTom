@@ -1,12 +1,44 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, Excercise } from "@prisma/client";
+import {
+  IBody,
+  IExercise,
+  IMuscle,
+  IMuscleForExercise,
+} from "../../../@types/models";
+import {
+  EExerciseDifficulty,
+  EExerciseType,
+  EMuscleID,
+} from "../../../@types/enums";
 
 const prisma = new PrismaClient();
 
-const body: any = prisma.body.create({
-  data: {
-    userID: "",
-    muscles: {},
-  },
-});
+// const headUp: Exercise = prisma.excercise.create({
+//   data: {
+//     type: EExerciseType.STRETCH,
+//     difficulty: EExerciseDifficulty.EASY,
+//     muscle: [EMuscleID.ADDUCTOR_LONGUS, EMuscleID.ADDUCTOR_MAGNUS],
+//   },
+// });
+//
+// const adductor: IMuscle = prisma.muscle.create({
+//   data: {
+//     id: EMuscleID.ADDUCTOR_LONGUS,
+//   },
+// });
+//
+// const adductorExercise: IMuscleForExercise = prisma.muscleForExercise.create({
+//   data: {
+//     muscleID: adductor.id,
+//     exercise: headUp.id,
+//   },
+// });
+//
+// const body: IBody = prisma.body.create({
+//   data: {
+//     userID: "",
+//     muscles: {},
+//   },
+// });
 
-const serratusAnterior = prisma;
+// const serratusAnterior = prisma;

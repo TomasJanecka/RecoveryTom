@@ -43,7 +43,8 @@ model Body {
 }
 
 model Muscle {
-  id          MuscleEnum          @id
+  id          Int                 @id @default(autoincrement())
+  name        MuscleEnum          @unique
   body        Body                @relation(fields: [bodyID], references: [userID])
   bodyID      String              @db.VarChar(128)
   problem     MuscleHasProblem[]
@@ -54,15 +55,15 @@ model Muscle {
 }
 
 model Excercise {
-  id              Int                 @id @default(autoincrement())
-  type            ExcerciseType
-  name            String              @unique @db.VarChar(30)
-  difficulty      ExerciseDifficulty
-  muscles         MuscleForExercise[]
+  id             Int                 @id @default(autoincrement())
+  type           ExcerciseType
+  name           String              @unique @db.VarChar(30)
+  difficulty     ExerciseDifficulty
+  muscles        MuscleForExercise[]
   favoriteByUser UserFavExercise[]
-  comments        Comment[]
-  message         MessageExercise[]
-  messageID       Int                 @db.Integer
+  comments       Comment[]
+  message        MessageExercise[]
+  messageID      Int                 @db.Integer
 }
 
 model Problem {
@@ -90,7 +91,7 @@ model MuscleForExercise {
   exercise    Excercise           @relation(fields: [exerciseID], references: [id])
   exerciseID  Int                 @db.Integer
   muscle      Muscle              @relation(fields: [muscleID], references: [id])
-  muscleID    MuscleEnum
+  muscleID    Int
   effectivity EffectivityOfMuscle @default(NONE)
 }
 
@@ -99,7 +100,7 @@ model MuscleHasProblem {
   problem   Problem[]  @relation(fields: [problemID], references: [id])
   problemID Int        @db.Integer
   muscle    Muscle     @relation(fields: [muscleID], references: [id])
-  muscleID  MuscleEnum
+  muscleID  Int
   createdAt DateTime   @default(now())
   changedAt DateTime   @default(now())
 }
@@ -177,7 +178,7 @@ model Comment {
   foodID     Int         @db.Integer
   exercise   Excercise?  @relation(fields: [exerciseID], references: [id])
   exerciseID Int         @db.Integer
-  problem    Problem?     @relation(fields: [problemID], references: [id])
+  problem    Problem?    @relation(fields: [problemID], references: [id])
   problemID  Int
   likes      Int         @default(0) @db.Integer
   type       CommentType
