@@ -16,16 +16,16 @@ model User {
   points            Int               @default(0) @db.Integer
   picture           String            @default("") @db.VarChar(128)
   location          String            @default("") @db.VarChar(10)
-  bmr               Int               @default(0) @db.Integer
   signedAt          DateTime          @default(now())
   body              Body?
   comments          Comment[]
   cookedFood        Food[]
-  favoriteFood      UserFavFood[]
   problems          UserHasProblem[]
-  favoriteExercises UserFavExercise[]
+  favoriteExercises UserRecordOfExercise[]
   messages          Message[]
   products          Product[]
+  hasContacts       User[]            @relation("hasContact", references: [id])
+  isContact         User[]            @relation("hasContact", references: [id])
 }
 
 model UserHasProblem {
@@ -37,33 +37,36 @@ model UserHasProblem {
 }
 
 model Body {
-  user    User     @relation(fields: [userID], references: [id])
-  userID  String   @id @db.VarChar(128)
-  muscles Muscle[]
+  user     User     @relation(fields: [userID], references: [id])
+  userID   String   @id @db.VarChar(128)
+  bmr      Int      @default(0) @db.Integer
+  proteins Int      @default(0) @db.Integer
+  carbs    Int      @default(0) @db.Integer
+  fats     Int      @default(0) @db.Integer
+  kg       Int      @default(0) @db.Integer
+  muscles  Muscle[]
 }
 
 model Muscle {
-  id          Int                 @id @default(autoincrement())
-  name        MuscleEnum          @unique
-  body        Body                @relation(fields: [bodyID], references: [userID])
-  bodyID      String              @db.VarChar(128)
+  id          Int                @id @default(autoincrement())
+  name        MuscleID
+  body        Body               @relation(fields: [bodyID], references: [userID])
+  bodyID      String             @db.VarChar(128)
   problem     MuscleHasProblem[]
-  exercise    MuscleForExercise[]
-  condition   MuscleCondition     @default(GOOD)
+  condition   MuscleCondition    @default(GOOD)
   muscleGroup MuscleGroup
   joints      Joint[]
 }
 
-model Excercise {
-  id             Int                 @id @default(autoincrement())
-  type           ExcerciseType
-  name           String              @unique @db.VarChar(30)
-  difficulty     ExerciseDifficulty
-  muscles        MuscleForExercise[]
-  favoriteByUser UserFavExercise[]
-  comments       Comment[]
-  message        MessageExercise[]
-  messageID      Int                 @db.Integer
+model Exercise {
+  id                       Int                @id @default(autoincrement())
+  type                     ExerciseType
+  name                     String             @unique @db.VarChar(30)
+  difficulty               ExerciseDifficulty
+  favoriteByUser           UserRecordOfExercise[]
+  comments                 Comment[]
+  message                  MessageExercise[]
+  encodedMuscleEffectivity String[]           @db.VarChar(128)
 }
 
 model Problem {
@@ -78,31 +81,22 @@ model Problem {
   hidden       Boolean            @default(false)
 }
 
-model UserFavExercise {
-  id         Int       @id @default(autoincrement())
-  user       User      @relation(fields: [userID], references: [id])
-  userID     String    @db.VarChar(128)
-  exercise   Excercise @relation(fields: [exerciseID], references: [id])
-  exerciseID Int       @db.Integer
-}
-
-model MuscleForExercise {
-  id          Int                 @id @default(autoincrement()) @db.Integer
-  exercise    Excercise           @relation(fields: [exerciseID], references: [id])
-  exerciseID  Int                 @db.Integer
-  muscle      Muscle              @relation(fields: [muscleID], references: [id])
-  muscleID    Int
-  effectivity EffectivityOfMuscle @default(NONE)
+model UserRecordOfExercise {
+  id         Int      @id @default(autoincrement())
+  user       User     @relation(fields: [userID], references: [id])
+  userID     String   @db.VarChar(128)
+  exercise   Exercise @relation(fields: [exerciseID], references: [id])
+  exerciseID Int      @db.Integer
 }
 
 model MuscleHasProblem {
-  id        Int        @id @default(autoincrement())
-  problem   Problem[]  @relation(fields: [problemID], references: [id])
-  problemID Int        @db.Integer
-  muscle    Muscle     @relation(fields: [muscleID], references: [id])
+  id        Int       @id @default(autoincrement())
+  problem   Problem[] @relation(fields: [problemID], references: [id])
+  problemID Int       @db.Integer
+  muscle    Muscle    @relation(fields: [muscleID], references: [id])
   muscleID  Int
-  createdAt DateTime   @default(now())
-  changedAt DateTime   @default(now())
+  createdAt DateTime  @default(now())
+  changedAt DateTime  @default(now())
 }
 
 model Message {
@@ -118,11 +112,11 @@ model Message {
 }
 
 model MessageExercise {
-  id         Int       @id @default(autoincrement()) @db.Integer
-  exercise   Excercise @relation(fields: [exerciseID], references: [id])
-  exerciseID Int       @db.Integer
-  message    Message   @relation(fields: [messageID], references: [id])
-  messageID  Int       @db.Integer
+  id         Int      @id @default(autoincrement()) @db.Integer
+  exercise   Exercise @relation(fields: [exerciseID], references: [id])
+  exerciseID Int      @db.Integer
+  message    Message  @relation(fields: [messageID], references: [id])
+  messageID  Int      @db.Integer
 }
 
 model MessageFood {
@@ -134,31 +128,23 @@ model MessageFood {
 }
 
 model Food {
-  id          Int           @id @default(autoincrement()) @db.Integer
-  name        String        @default("") @db.VarChar(30)
-  proteins    Int           @default(0) @db.Integer
-  carbs       Int           @default(0) @db.Integer
-  fats        Int           @default(0) @db.Integer
-  kcal        Int           @default(0) @db.Integer
-  description String        @db.VarChar(128)
-  photos      Photo[]
-  ingredients String[]
-  comments    Comment[]
-  message     MessageFood[]
-  cookedBy    User          @relation(fields: [cookedByID], references: [id])
-  cookedByID  String        @db.VarChar(128)
-  favoriteBy  UserFavFood[]
-  createdAt   DateTime      @default(now())
-  editedAt    DateTime      @default(now())
-  hidden      Boolean       @default(false)
-}
-
-model UserFavFood {
-  id     Int    @id @default(autoincrement())
-  user   User   @relation(fields: [userID], references: [id])
-  userID String @db.VarChar(128)
-  food   Food   @relation(fields: [foodID], references: [id])
-  foodID Int    @db.Integer
+  id              Int           @id @default(autoincrement()) @db.Integer
+  name            String        @default("") @db.VarChar(30)
+  proteins        Int           @default(0) @db.Integer
+  carbs           Int           @default(0) @db.Integer
+  fats            Int           @default(0) @db.Integer
+  kcal            Int           @default(0) @db.Integer
+  description     String        @db.VarChar(128)
+  photos          Photo[]
+  ingredients     String[]
+  comments        Comment[]
+  message         MessageFood[]
+  cookedBy        User          @relation(fields: [cookedByID], references: [id])
+  cookedByID      String        @db.VarChar(128)
+  createdAt       DateTime      @default(now())
+  editedAt        DateTime      @default(now())
+  hidden          Boolean       @default(false)
+  favoriteByUser  String[]
 }
 
 model Photo {
@@ -176,7 +162,7 @@ model Comment {
   userID     String      @db.VarChar(128)
   food       Food?       @relation(fields: [foodID], references: [id])
   foodID     Int         @db.Integer
-  exercise   Excercise?  @relation(fields: [exerciseID], references: [id])
+  exercise   Exercise?   @relation(fields: [exerciseID], references: [id])
   exerciseID Int         @db.Integer
   problem    Problem?    @relation(fields: [problemID], references: [id])
   problemID  Int
@@ -193,13 +179,6 @@ model Product {
   price  Int    @default(0) @db.Integer
   user   User   @relation(fields: [userID], references: [id])
   userID String @db.VarChar(128)
-}
-
-enum EffectivityOfMuscle {
-  NONE
-  E1
-  E2
-  E3
 }
 
 enum ExerciseDifficulty {
@@ -227,6 +206,7 @@ enum Joint {
 enum MuscleCondition {
   WEAK
   GOOD
+  STRETCHED_OUT
 }
 
 enum CommentType {
@@ -236,18 +216,20 @@ enum CommentType {
 }
 
 enum MuscleGroup {
-  SCAPULA
+  NECK
   CHEST
+  PELVIS
   BELLY
+  THIGH
+  CALFB_BACK
+  CALF_FRONT
+  ARM
+  FOREARM
+  SCAPULA
+  SPINE
 }
 
-enum Lopatka {
-  SERRATUS_ANTERIOR
-  RHOMBOID_MAJOR
-  RHOMBOID_MINOR
-}
-
-enum ExcerciseType {
+enum ExerciseType {
   STRETCH
   STRENGTH
   MASAGE
@@ -255,7 +237,7 @@ enum ExcerciseType {
   TEST
 }
 
-enum MuscleEnum {
+enum MuscleID {
   STERNOHYOID
   OMOHYOID
   STERNOCLEIDOMASTEOID
