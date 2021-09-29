@@ -19,9 +19,10 @@ model User {
   signedAt          DateTime          @default(now())
   body              Body?
   comments          Comment[]
+  favoriteFood      UserFavFood[]
   cookedFood        Food[]
   problems          UserHasProblem[]
-  favoriteExercises UserRecordOfExercise[]
+  favoriteExercises UserFavExercise[]
   messages          Message[]
   products          Product[]
   hasContacts       User[]            @relation("hasContact", references: [id])
@@ -63,7 +64,7 @@ model Exercise {
   type                     ExerciseType
   name                     String             @unique @db.VarChar(30)
   difficulty               ExerciseDifficulty
-  favoriteByUser           UserRecordOfExercise[]
+  favoriteByUser           UserFavExercise[]
   comments                 Comment[]
   message                  MessageExercise[]
   encodedMuscleEffectivity String[]           @db.VarChar(128)
@@ -81,12 +82,20 @@ model Problem {
   hidden       Boolean            @default(false)
 }
 
-model UserRecordOfExercise {
+model UserFavExercise {
   id         Int      @id @default(autoincrement())
   user       User     @relation(fields: [userID], references: [id])
   userID     String   @db.VarChar(128)
   exercise   Exercise @relation(fields: [exerciseID], references: [id])
   exerciseID Int      @db.Integer
+}
+
+model UserFavFood {
+  id     Int    @id @default(autoincrement())
+  user   User   @relation(fields: [userID], references: [id])
+  userID String @db.VarChar(128)
+  food   Food   @relation(fields: [foodID], references: [id])
+  foodID Int    @db.Integer
 }
 
 model MuscleHasProblem {
@@ -128,23 +137,24 @@ model MessageFood {
 }
 
 model Food {
-  id              Int           @id @default(autoincrement()) @db.Integer
-  name            String        @default("") @db.VarChar(30)
-  proteins        Int           @default(0) @db.Integer
-  carbs           Int           @default(0) @db.Integer
-  fats            Int           @default(0) @db.Integer
-  kcal            Int           @default(0) @db.Integer
-  description     String        @db.VarChar(128)
-  photos          Photo[]
-  ingredients     String[]
-  comments        Comment[]
-  message         MessageFood[]
-  cookedBy        User          @relation(fields: [cookedByID], references: [id])
-  cookedByID      String        @db.VarChar(128)
-  createdAt       DateTime      @default(now())
-  editedAt        DateTime      @default(now())
-  hidden          Boolean       @default(false)
-  favoriteByUser  String[]
+  id             Int           @id @default(autoincrement()) @db.Integer
+  name           String        @default("") @db.VarChar(30)
+  proteins       Int           @default(0) @db.Integer
+  carbs          Int           @default(0) @db.Integer
+  fats           Int           @default(0) @db.Integer
+  kcal           Int           @default(0) @db.Integer
+  description    String        @db.VarChar(128)
+  photos         Photo[]
+  ingredients    String[]
+  comments       Comment[]
+  message        MessageFood[]
+  favoriteBy     UserFavFood[]
+  cookedBy       User          @relation(fields: [cookedByID], references: [id])
+  cookedByID     String        @db.VarChar(128)
+  createdAt      DateTime      @default(now())
+  editedAt       DateTime      @default(now())
+  hidden         Boolean       @default(false)
+  favoriteByUser String[]
 }
 
 model Photo {
