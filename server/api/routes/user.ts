@@ -1,15 +1,23 @@
-import { PrismaClient, User } from "@prisma/client";
+import {
+  PrismaClient,
+  User,
+  MuscleID,
+  Muscle,
+  Joint,
+  MuscleGroup,
+} from "@prisma/client";
 import { Request, Response, NextFunction, Router } from "express";
 import express from "express";
 import {
   UserFavorites,
+  UsersBody,
   UsersProducts,
   UserWithMessages,
 } from "../../@types/types";
 
 const prisma = new PrismaClient();
 let router: Router = express.Router();
-// router.use(express.json());
+router.use(express.json());
 
 router.use(
   "/",
@@ -132,6 +140,77 @@ router.route("/favorite").post(async (request: Request, response: Response) => {
   }
 
   response.status(200).json({ message: `${queryType} was added to favorite.` });
+});
+
+router.route("/problem").post(async (request: Request, response: Response) => {
+  const { name, muscles } = request.body;
+  const muscleNames = Object.values(MuscleID).map((muscle) => {
+    return muscle.toString();
+  });
+
+  const usersBodyMuscles: UsersBody | null = await prisma.body.findUnique({
+    where: { userID: response.locals.userID },
+    include: { muscles: true },
+  });
+
+  let bodyMuscles: Muscle[] = [];
+  if (usersBodyMuscles) {
+    bodyMuscles = usersBodyMuscles.muscles;
+  } else {
+    response
+      .status(500)
+      .json({ message: "Failed to load users body muscles!" });
+  }
+
+  // const newProblem = await prisma.problem.create({
+  //   data: {
+  //     name: name,
+  //   },
+  // });
+
+  let problemJoints = [];
+  let problemAreas = [];
+
+  for (const muscle of muscles) {
+    if (!muscleNames.includes(muscle)) {
+      response.status(400).json({ message: `Wrong muscle=${muscle}!` });
+    }
+    const muscleToConnect = bodyMuscles.find(
+      (actMuscle) => actMuscle.name === muscle
+    );
+    if (muscleToConnect) {
+      // console.log(muscleToConnect.joints);
+      problemJoints.push(muscleToConnect.joints);
+      problemAreas.push(muscleToConnect.muscleGroup);
+      // const newConnection = await prisma.muscleHasProblem.create({
+      //   data: {
+      //     muscleID: muscleToConnect.id,
+      //     problemID: newProblem.id,
+      //   },
+      // });
+    }
+  }
+
+  console.log(problemAreas);
+
+  // let typedMuscleGroup: MuscleGroup = MuscleGroup;
+  // let typedMuscleGroupString: keyof typeof MuscleGroup = problemAreas[0];
+
+  const problemMuscles: MuscleGroup[] = problemAreas.map((area) => {
+    return Object(typeof area as MuscleGroup);
+  });
+
+  console.log(problemMuscles);
+
+  // await prisma.problem.update({
+  //   where: { id: newProblem.id },
+  //   data: {
+  //     joints: problemJoints.flat(1),
+  //     muscleGroups: problemMuscles,
+  //   },
+  // });
+
+  response.status(200).json({ message: `Problem created.` });
 });
 
 export default router;

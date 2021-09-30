@@ -1,15 +1,4 @@
-import { PrismaClient, Excercise } from "@prisma/client";
-import {
-  IBody,
-  IExercise,
-  IMuscle,
-  IMuscleForExercise,
-} from "../../../recovery-app/@types/models";
-import {
-  EExerciseDifficulty,
-  EExerciseType,
-  EMuscleID,
-} from "../../../recovery-app/@types/enums";
+import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 

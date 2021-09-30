@@ -1,0 +1,134 @@
+@startuml
+
+entity User {
+    *id : serial
+    --
+    *
+}
+
+entity Message {
+    *id : serial
+    --
+    *
+}
+
+entity UserProblem {
+    *id : serial
+    --
+    *
+}
+
+entity UserFavExercise {
+    *id : serial
+    --
+    *
+}
+
+entity MessageExercise {
+    *id : serial
+    --
+    *
+}
+
+entity MessageFood {
+    *id : serial
+    --
+    *
+}
+
+entity Exercise {
+    *id : serial
+    --
+    encodedMuscleEffectivity String[]           @db.VarChar(128)
+}
+
+entity Body {
+    *id : serial
+    --
+    *
+}
+
+entity Problem {
+    *id : serial
+    --
+    *
+}
+
+entity Food {
+    *id : serial
+    --
+    *
+}
+
+entity Photo {
+    *id : serial
+    --
+    *
+}
+
+entity Comment {
+    *id : serial
+    --
+    *
+}
+
+entity Product {
+    *id : serial
+    --
+    *
+}
+
+entity Muscle {
+    *id : serial
+    --
+    *
+}
+
+entity MuscleHasProblem {
+    *id : serial
+    --
+    *
+}
+
+entity UserHasContact {
+    *id : serial
+    --
+    *
+}
+
+entity UserFavFood {
+    *id : serial
+    --
+    *
+}
+
+
+User ||..o{ Comment
+User ||..o{ UserHasContact
+UserHasContact }o..|| User
+User ||..o{ Food : hasCooked
+User ||..o{ UserProblem
+UserProblem }o..|| Problem
+User ||..o{ UserFavExercise
+UserFavExercise }o..|| Exercise
+User ||..o{ UserFavFood
+UserFavFood }o..|| Food
+User ||..o{ Message
+User ||..o{ Product
+User ||..|| Body
+Body ||..|{ Muscle
+Muscle ||..o{ MuscleHasProblem
+MuscleHasProblem }o..|| Problem
+
+Message ||..o{ MessageExercise
+MessageExercise }o..|| Exercise
+Message ||..o{ MessageFood
+MessageFood }o..|| Food
+
+Problem ||..o{ Comment
+Exercise ||..o{ Comment
+Food ||..o{ Comment
+Food ||..|{ Photo
+
+
+@enduml
