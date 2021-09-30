@@ -21,7 +21,7 @@ model User {
   comments          Comment[]
   favoriteFood      UserFavFood[]
   cookedFood        Food[]
-  problems          UserHasProblem[]
+  problems          UserProblem[]
   favoriteExercises UserFavExercise[]
   messages          Message[]
   products          Product[]
@@ -29,12 +29,13 @@ model User {
   isContact         User[]            @relation("hasContact", references: [id])
 }
 
-model UserHasProblem {
+model UserProblem {
   id        Int     @id @default(autoincrement()) @db.Integer
   user      User    @relation(fields: [userID], references: [id])
   userID    String  @db.VarChar(128)
   problem   Problem @relation(fields: [problemID], references: [id])
   problemID Int     @db.Integer
+  liked     Boolean @default(false) @db.Boolean
 }
 
 model Body {
@@ -73,7 +74,7 @@ model Exercise {
 model Problem {
   id           Int                @id @default(autoincrement()) @db.Integer
   name         String?            @default("") @db.VarChar(128)
-  user         UserHasProblem[]
+  user         UserProblem[]
   muscleGroups MuscleGroup[]
   joints       Joint[]
   muscles      MuscleHasProblem[]

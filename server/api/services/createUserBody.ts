@@ -4,12 +4,12 @@ import {
   IExercise,
   IMuscle,
   IMuscleForExercise,
-} from "../../../@types/models";
+} from "../../../recovery-app/@types/models";
 import {
   EExerciseDifficulty,
   EExerciseType,
   EMuscleID,
-} from "../../../@types/enums";
+} from "../../../recovery-app/@types/enums";
 
 const prisma = new PrismaClient();
 
