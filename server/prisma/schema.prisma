@@ -81,6 +81,7 @@ model Problem {
   comments     Comment[]
   createdAt    DateTime           @default(now())
   hidden       Boolean            @default(false)
+  messages     MessageProblem[]
 }
 
 model UserFavExercise {
@@ -104,7 +105,7 @@ model MuscleHasProblem {
   problem   Problem[] @relation(fields: [problemID], references: [id])
   problemID Int       @db.Integer
   muscle    Muscle    @relation(fields: [muscleID], references: [id])
-  muscleID  Int
+  muscleID  Int       @db.Integer
   createdAt DateTime  @default(now())
   changedAt DateTime  @default(now())
 }
@@ -114,11 +115,20 @@ model Message {
   text      String            @default("") @db.VarChar(128)
   exercises MessageExercise[]
   food      MessageFood[]
+  problem   MessageProblem[]
   user      User              @relation(fields: [userID], references: [id])
   userID    String            @db.VarChar(128)
   createdAt DateTime          @default(now())
   editedAt  DateTime          @default(now())
   hidden    Boolean           @default(false)
+}
+
+model MessageProblem {
+  id        Int     @id @default(autoincrement()) @db.Integer
+  message   Message @relation(fields: [messageID], references: [id])
+  messageID Int     @db.Integer
+  problem   Problem @relation(fields: [problemID], references: [id])
+  problemID Int     @db.Integer
 }
 
 model MessageExercise {

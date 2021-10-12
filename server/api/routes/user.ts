@@ -107,36 +107,52 @@ router.route("/buy").post(async (request: Request, response: Response) => {
 });
 
 router.route("/favorite").post(async (request: Request, response: Response) => {
-  const queryTypes = ["exercise", "food"];
   const queryType = <string>request.query.type;
   const exerciseID = request.header("X-Exercise");
+  const foodID = request.header("X-Food");
 
   let newRelation;
-  if (!exerciseID) {
-    response.status(400).json({ message: `Wrong exerciseID=${exerciseID}!` });
-  } else {
-    switch (queryType) {
-      case queryTypes[0]:
+  switch (queryType) {
+    case "exercise":
+      if (exerciseID) {
         newRelation = await prisma.userFavExercise.create({
           data: {
             userID: response.locals.userID,
             exerciseID: +exerciseID,
           },
         });
-        break;
-      case queryTypes[1]:
-        newRelation = await prisma.userFavExercise.create({
-          data: {
-            userID: response.locals.userID,
-            exerciseID: +exerciseID,
-          },
-        });
-        break;
-      default:
+      } else {
         response
           .status(400)
-          .json({ message: `Wrong query parameter=${queryType}!` });
-    }
+          .json({ message: `Wrong header X-Exercise=${exerciseID}!` });
+        return;
+      }
+      break;
+    case "food":
+      if (foodID) {
+        newRelation = await prisma.userFavExercise.create({
+          data: {
+            userID: response.locals.userID,
+            exerciseID: +foodID,
+          },
+        });
+      } else {
+        response
+          .status(400)
+          .json({ message: `Wrong header X-Food=${foodID}!` });
+        return;
+      }
+      break;
+    default:
+      response
+        .status(400)
+        .json({ message: `Wrong query parameter=${queryType}!` });
+      return;
+  }
+
+  if (!newRelation) {
+    response.status(500).json({ message: "Failed to create new relation!" });
+    return;
   }
 
   response.status(200).json({ message: `${queryType} was added to favorite.` });
@@ -160,57 +176,143 @@ router.route("/problem").post(async (request: Request, response: Response) => {
     response
       .status(500)
       .json({ message: "Failed to load users body muscles!" });
+    return;
   }
 
-  // const newProblem = await prisma.problem.create({
-  //   data: {
-  //     name: name,
-  //   },
-  // });
+  let newProblem = await prisma.problem.create({
+    data: {
+      name: name,
+    },
+  });
 
-  let problemJoints = [];
-  let problemAreas = [];
+  let problemJoints: Set<Joint> = new Set();
+  let problemGroups: Set<MuscleGroup> = new Set();
 
   for (const muscle of muscles) {
     if (!muscleNames.includes(muscle)) {
       response.status(400).json({ message: `Wrong muscle=${muscle}!` });
+      await prisma.problem.delete({ where: { id: newProblem.id } });
+      return;
     }
-    const muscleToConnect = bodyMuscles.find(
+    const problemMuscle = bodyMuscles.find(
       (actMuscle) => actMuscle.name === muscle
     );
-    if (muscleToConnect) {
-      // console.log(muscleToConnect.joints);
-      problemJoints.push(muscleToConnect.joints);
-      problemAreas.push(muscleToConnect.muscleGroup);
-      // const newConnection = await prisma.muscleHasProblem.create({
-      //   data: {
-      //     muscleID: muscleToConnect.id,
-      //     problemID: newProblem.id,
-      //   },
-      // });
+
+    if (problemMuscle) {
+      problemMuscle.joints.map((joint) => {
+        if (joint) {
+          problemJoints.add(joint as keyof typeof Joint);
+        }
+      });
+      problemGroups.add(problemMuscle.muscleGroup);
     }
   }
 
-  console.log(problemAreas);
-
-  // let typedMuscleGroup: MuscleGroup = MuscleGroup;
-  // let typedMuscleGroupString: keyof typeof MuscleGroup = problemAreas[0];
-
-  const problemMuscles: MuscleGroup[] = problemAreas.map((area) => {
-    return Object(typeof area as MuscleGroup);
+  newProblem = await prisma.problem.update({
+    where: { id: newProblem.id },
+    data: {
+      joints: [...problemJoints],
+      muscleGroups: [...problemGroups],
+    },
   });
 
-  console.log(problemMuscles);
-
-  // await prisma.problem.update({
-  //   where: { id: newProblem.id },
-  //   data: {
-  //     joints: problemJoints.flat(1),
-  //     muscleGroups: problemMuscles,
-  //   },
-  // });
+  if (!newProblem) {
+    response.status(500).json({ message: "Failed to create user's problem!" });
+    return;
+  }
 
   response.status(200).json({ message: `Problem created.` });
+});
+
+router.route("/message").post(async (request: Request, response: Response) => {
+  const { text, exerciseID, foodID, problemID } = request.body;
+  const queryType = <string>request.query.type;
+
+  const newMessage = await prisma.message.create({
+    data: {
+      text: text,
+      userID: response.locals.userID,
+    },
+  });
+
+  switch (queryType) {
+    case "exercise":
+      if (!(typeof exerciseID === "number")) {
+        response
+          .status(400)
+          .json({ message: `Wrong exerciseID=${exerciseID}!` });
+        return;
+      }
+      const exercise = await prisma.exercise.findUnique({
+        where: { id: exerciseID },
+      });
+      if (!exercise) {
+        response
+          .status(400)
+          .json({ message: `Wrong exerciseID=${exerciseID}!` });
+        return;
+      }
+      const messageExercise = await prisma.messageExercise.create({
+        data: { messageID: newMessage.id, exerciseID: exerciseID },
+      });
+      if (!messageExercise) {
+        response
+          .status(500)
+          .json({ message: "Failed to create binding message exercise!" });
+        return;
+      }
+      break;
+    case "food":
+      if (!(typeof foodID === "number")) {
+        response.status(400).json({ message: `Wrong foodID=${foodID}!` });
+        return;
+      }
+      const food = await prisma.food.findUnique({ where: { id: foodID } });
+      if (!food) {
+        response.status(400).json({ message: `Wrong foodID=${foodID}!` });
+        return;
+      }
+      const messageFood = await prisma.messageFood.create({
+        data: { messageID: newMessage.id, foodID: foodID },
+      });
+      if (!messageFood) {
+        response
+          .status(500)
+          .json({ message: "Failed to create binding message food!" });
+        return;
+      }
+      break;
+    case "problem":
+      if (!(typeof problemID === "number")) {
+        response.status(400).json({ message: `Wrong problemID=${problemID}!` });
+        return;
+      }
+      const problem = await prisma.problem.findUnique({
+        where: { id: problemID },
+      });
+      if (!problem) {
+        response.status(400).json({ message: `Wrong problemID=${problemID}!` });
+        return;
+      }
+      const messageProblem = await prisma.messageProblem.create({
+        data: { messageID: newMessage.id, problemID: problemID },
+      });
+      if (!messageProblem) {
+        response
+          .status(500)
+          .json({ message: "Failed to create binding message problem!" });
+        return;
+      }
+      break;
+    default:
+      await prisma.message.delete({ where: { id: newMessage.id } });
+      response
+        .status(400)
+        .json({ message: `Wrong query type parameter=${queryType}!` });
+      return;
+  }
+
+  response.status(200).json({ message: "Message was created!" });
 });
 
 export default router;
