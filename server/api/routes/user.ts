@@ -181,7 +181,7 @@ router.route("/problem").post(async (request: Request, response: Response) => {
 
   let newProblem = await prisma.problem.create({
     data: {
-      name: name,
+      name: name.toString(),
     },
   });
 

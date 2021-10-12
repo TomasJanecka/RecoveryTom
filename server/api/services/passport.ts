@@ -1,4 +1,6 @@
 import { PrismaClient } from "@prisma/client";
+import { response } from "express";
+import createBody from "./createUserBody";
 
 const passport = require("passport");
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
@@ -43,6 +45,11 @@ passport.use(
             location: profile._json.location,
           },
         });
+        if (!user) {
+          response.status(500).json({ message: "Could not create user." });
+          return;
+        }
+        await createBody(user.id);
       }
       done(null, user);
     }
