@@ -3,7 +3,10 @@ import ReactDOM from "react-dom";
 import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
+import { setToLS } from "./utils/storage";
+import * as themes from "./theme/schema.json";
 
+setToLS("all-themes", themes.data);
 ReactDOM.render(
   <React.StrictMode>
     <App />
