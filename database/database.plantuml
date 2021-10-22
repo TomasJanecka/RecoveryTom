@@ -12,7 +12,7 @@ entity Message {
     *
 }
 
-entity UserProblem {
+entity UserFavProblem {
     *id : serial
     --
     *
@@ -78,18 +78,6 @@ entity Product {
     *
 }
 
-entity Muscle {
-    *id : serial
-    --
-    *
-}
-
-entity MuscleHasProblem {
-    *id : serial
-    --
-    *
-}
-
 entity UserHasContact {
     *id : serial
     --
@@ -102,13 +90,19 @@ entity UserFavFood {
     *
 }
 
+entity Muscle {
+    *id : serial
+    --
+    *
+}
+
 
 User ||..o{ Comment
 User ||..o{ UserHasContact
 UserHasContact }o..|| User
 User ||..o{ Food : hasCooked
-User ||..o{ UserProblem
-UserProblem }o..|| Problem
+User ||..o{ UserFavProblem
+UserFavProblem }o..|| Problem
 User ||..o{ UserFavExercise
 UserFavExercise }o..|| Exercise
 User ||..o{ UserFavFood
@@ -116,9 +110,8 @@ UserFavFood }o..|| Food
 User ||..o{ Message
 User ||..o{ Product
 User ||..|| Body
-Body ||..|{ Muscle
-Muscle ||..o{ MuscleHasProblem
-MuscleHasProblem }o..|| Problem
+Body ||..o{ Problem
+Problem }o..|{ 
 
 Message ||..o{ MessageExercise
 MessageExercise }o..|| Exercise

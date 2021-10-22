@@ -27,7 +27,7 @@ export enum ECommentType {
 
 export enum EJoint {
   HEAD,
-  NECK,
+  SHOULDER_CENTER,
   SHOULDER_CENTER,
   SHOULDER,
   ELBOW,

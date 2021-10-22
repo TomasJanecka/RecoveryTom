@@ -1,0 +1,336 @@
+-- CreateEnum
+CREATE TYPE "FoodCategory" AS ENUM ('MEAL', 'DESSERT', 'BREAKFAST', 'FAST');
+
+-- CreateEnum
+CREATE TYPE "ExerciseDifficulty" AS ENUM ('EASY', 'MEDIUM', 'HARD');
+
+-- CreateEnum
+CREATE TYPE "MuscleCondition" AS ENUM ('WEAK', 'GOOD', 'STRETCHED_OUT');
+
+-- CreateEnum
+CREATE TYPE "CommentType" AS ENUM ('EXERCISE', 'FOOD', 'PROBLEM');
+
+-- CreateEnum
+CREATE TYPE "ExerciseType" AS ENUM ('STRETCH', 'STRENGTH', 'MASAGE', 'ENDURANCE', 'TEST');
+
+-- CreateEnum
+CREATE TYPE "Joint" AS ENUM ('HEAD', 'SHOULDER_CENTER', 'SHOULDER', 'ELBOW', 'WRIST', 'FINGERS_HAND', 'LOW_BACK', 'COCCYGIS', 'HIP', 'KNEE', 'ANKLE', 'FINGERS_FOOT');
+
+-- CreateEnum
+CREATE TYPE "MuscleGroup" AS ENUM ('NECK', 'SHOULDER_CENTER', 'CHEST', 'UPPER_ARM', 'SCAPULA', 'RIBS', 'FOREARM', 'SPINE_UP', 'SPINE_LOW', 'LOW_BACK', 'PELVIS', 'BELLY', 'THIGH_FRONT', 'THIGH_BACK', 'CALF_BACK', 'CALF_FRONT');
+
+-- CreateEnum
+CREATE TYPE "MuscleID" AS ENUM ('STERNOHYOID', 'OMOHYOIDS', 'STERNOCLEIDOMASTEOID', 'SEMISPINALIS_CAPITIS', 'SPLENIUS_CAPITIS', 'LEVATOR_SCAPULAE', 'SCALENES', 'PECTORALIS_MAJOR', 'PECTORALIS_MINOR', 'SERRATUS_ANTERIOR', 'SUPRASPINATUS', 'INFRASPINATUS', 'TERES_MAJOR', 'TERES_MINOR', 'SUBSCAPULARIS', 'RHOMBOID_MINOR', 'RHOMBOID_MAJOR', 'SERRATUS_POSTERIOR_SUPERIOR', 'SERRATUS_POSTERIOR_INFERIOR', 'LATISSIMUS_DORSI', 'TRAPEZIUS', 'DELTOID', 'CORACOBRACHIALIS', 'BICEPS_BRACHII_SHORT', 'BICEPS_BRACHII_LONG', 'TRICEPS_BRACHII', 'BRACHIORADIALIS', 'PRONATOR_TERES', 'FLEXOR_CARPI_RADIALIS', 'FLEXOR_CARPI_ULNARIS', 'PALMARIS_LONGUS', 'ANCONEUS', 'EXTENSOR_CARPI_RADIALIS_LONGUS', 'EXTENSOR_CARPI_RADIALIS_BREVIS', 'EXTENSOR_DIGITORUM', 'EXTENSOR_POLICIS_LONGUS', 'EXTENSOR_POLICIS_BREVIS', 'RECTUS_ABDOMINIS', 'TRANVERSUS_ABDOMINIS', 'EXTERNAL_OBLIQUE', 'INTERNAL_OBLIQUE', 'PSOAS_MINOR', 'PSOAS_MAJOR', 'ILIACUS', 'ILIOPSOAS', 'SARTORIUS', 'TENSOR_FASCIAE_LATAE', 'RECTUS_FEMORIS', 'VASTUS_LATERALIS', 'VASTUS_MEDIALIS', 'GRACILIS', 'ADDUCTOR_LONGUS', 'GLUTEUS_MAXIMUS', 'GLUTEUS_MEDIUS', 'GLUTEUS_MINIMUS', 'PIRIFORMIS', 'ADDUCTOR_MAGNUS', 'BICEPS_FEMORIS', 'SEMITENDINOSUS', 'SEMIMEMBRANOSUS', 'GASTROCNEMIUS', 'POPLITERIUS', 'PLANTARIS', 'FIBULARIS_LONGUS', 'TIBIALIS_ANTERIOR', 'EXTENSOR_DIGITORUM_LONGUS', 'ETENSOR_HALLUCIS_LONGUS', 'SOLEUS', 'FIBULARIS_TERTIUS');
+
+-- CreateTable
+CREATE TABLE "User" (
+    "id" VARCHAR(128) NOT NULL,
+    "email" VARCHAR(128) NOT NULL DEFAULT E'',
+    "name" VARCHAR(128) NOT NULL DEFAULT E'',
+    "age" INTEGER NOT NULL DEFAULT 0,
+    "darkmode" BOOLEAN NOT NULL DEFAULT false,
+    "points" INTEGER NOT NULL DEFAULT 0,
+    "picture" VARCHAR(128) NOT NULL DEFAULT E'',
+    "location" VARCHAR(10) NOT NULL DEFAULT E'',
+    "signedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "rightHand" BOOLEAN NOT NULL DEFAULT true,
+
+    PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "UserProblem" (
+    "id" SERIAL NOT NULL,
+    "userID" VARCHAR(128) NOT NULL,
+    "problemID" INTEGER NOT NULL,
+    "liked" BOOLEAN NOT NULL DEFAULT false,
+
+    PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Body" (
+    "userID" VARCHAR(128) NOT NULL,
+    "bmr" INTEGER NOT NULL DEFAULT 0,
+    "proteins" INTEGER NOT NULL DEFAULT 0,
+    "carbs" INTEGER NOT NULL DEFAULT 0,
+    "fats" INTEGER NOT NULL DEFAULT 0,
+    "kg" INTEGER NOT NULL DEFAULT 0,
+
+    PRIMARY KEY ("userID")
+);
+
+-- CreateTable
+CREATE TABLE "Muscle" (
+    "id" SERIAL NOT NULL,
+    "name" "MuscleID" NOT NULL,
+    "bodyID" VARCHAR(128) NOT NULL,
+    "condition" "MuscleCondition" NOT NULL DEFAULT E'GOOD',
+    "muscleGroup" "MuscleGroup"[],
+    "joints" "Joint"[],
+
+    PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Exercise" (
+    "id" SERIAL NOT NULL,
+    "type" "ExerciseType" NOT NULL,
+    "name" VARCHAR(30) NOT NULL,
+    "difficulty" "ExerciseDifficulty" NOT NULL,
+    "encodedMuscleEffectivity" VARCHAR(128)[],
+
+    PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Problem" (
+    "id" SERIAL NOT NULL,
+    "name" VARCHAR(128) DEFAULT E'',
+    "description" VARCHAR(128) DEFAULT E'',
+    "muscleGroups" "MuscleGroup"[],
+    "joints" "Joint"[],
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "hidden" BOOLEAN NOT NULL DEFAULT false,
+
+    PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "UserFavExercise" (
+    "id" SERIAL NOT NULL,
+    "userID" VARCHAR(128) NOT NULL,
+    "exerciseID" INTEGER NOT NULL,
+
+    PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "UserFavFood" (
+    "id" SERIAL NOT NULL,
+    "userID" VARCHAR(128) NOT NULL,
+    "foodID" INTEGER NOT NULL,
+
+    PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "MuscleHasProblem" (
+    "id" SERIAL NOT NULL,
+    "problemID" INTEGER NOT NULL,
+    "muscleID" INTEGER NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "changedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Message" (
+    "id" SERIAL NOT NULL,
+    "text" VARCHAR(128) NOT NULL DEFAULT E'',
+    "userID" VARCHAR(128) NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "editedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "hidden" BOOLEAN NOT NULL DEFAULT false,
+
+    PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "MessageProblem" (
+    "id" SERIAL NOT NULL,
+    "messageID" INTEGER NOT NULL,
+    "problemID" INTEGER NOT NULL,
+
+    PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "MessageExercise" (
+    "id" SERIAL NOT NULL,
+    "exerciseID" INTEGER NOT NULL,
+    "messageID" INTEGER NOT NULL,
+
+    PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "MessageFood" (
+    "id" SERIAL NOT NULL,
+    "messageID" INTEGER NOT NULL,
+    "foodID" INTEGER NOT NULL,
+
+    PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Food" (
+    "id" SERIAL NOT NULL,
+    "name" VARCHAR(30) NOT NULL DEFAULT E'',
+    "proteins" INTEGER NOT NULL DEFAULT 0,
+    "carbs" INTEGER NOT NULL DEFAULT 0,
+    "fats" INTEGER NOT NULL DEFAULT 0,
+    "kcal" INTEGER NOT NULL DEFAULT 0,
+    "description" VARCHAR(128) NOT NULL,
+    "category" "FoodCategory"[],
+    "ingredients" TEXT[],
+    "cookedByID" VARCHAR(128) NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "editedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "hidden" BOOLEAN NOT NULL DEFAULT false,
+    "favoriteByUser" TEXT[],
+
+    PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Photo" (
+    "id" SERIAL NOT NULL,
+    "url" VARCHAR(128) NOT NULL,
+    "foodID" INTEGER NOT NULL,
+    "hidden" BOOLEAN NOT NULL DEFAULT false,
+
+    PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Comment" (
+    "id" SERIAL NOT NULL,
+    "text" VARCHAR(128) NOT NULL,
+    "userID" VARCHAR(128) NOT NULL,
+    "foodID" INTEGER NOT NULL,
+    "exerciseID" INTEGER NOT NULL,
+    "problemID" INTEGER NOT NULL,
+    "likes" INTEGER NOT NULL DEFAULT 0,
+    "type" "CommentType" NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "editedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "hidden" BOOLEAN NOT NULL DEFAULT false,
+
+    PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Product" (
+    "id" SERIAL NOT NULL,
+    "name" VARCHAR(20) NOT NULL,
+    "price" INTEGER NOT NULL DEFAULT 0,
+    "userID" VARCHAR(128) NOT NULL,
+
+    PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "_hasContact" (
+    "A" VARCHAR(128) NOT NULL,
+    "B" VARCHAR(128) NOT NULL
+);
+
+-- CreateTable
+CREATE TABLE "_MuscleHasProblemToProblem" (
+    "A" INTEGER NOT NULL,
+    "B" INTEGER NOT NULL
+);
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Exercise.name_unique" ON "Exercise"("name");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Food.cookedByID_name_unique" ON "Food"("cookedByID", "name");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "_hasContact_AB_unique" ON "_hasContact"("A", "B");
+
+-- CreateIndex
+CREATE INDEX "_hasContact_B_index" ON "_hasContact"("B");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "_MuscleHasProblemToProblem_AB_unique" ON "_MuscleHasProblemToProblem"("A", "B");
+
+-- CreateIndex
+CREATE INDEX "_MuscleHasProblemToProblem_B_index" ON "_MuscleHasProblemToProblem"("B");
+
+-- AddForeignKey
+ALTER TABLE "UserProblem" ADD FOREIGN KEY ("userID") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "UserProblem" ADD FOREIGN KEY ("problemID") REFERENCES "Problem"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Body" ADD FOREIGN KEY ("userID") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Muscle" ADD FOREIGN KEY ("bodyID") REFERENCES "Body"("userID") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "UserFavExercise" ADD FOREIGN KEY ("userID") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "UserFavExercise" ADD FOREIGN KEY ("exerciseID") REFERENCES "Exercise"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "UserFavFood" ADD FOREIGN KEY ("userID") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "UserFavFood" ADD FOREIGN KEY ("foodID") REFERENCES "Food"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "MuscleHasProblem" ADD FOREIGN KEY ("problemID") REFERENCES "Problem"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "MuscleHasProblem" ADD FOREIGN KEY ("muscleID") REFERENCES "Muscle"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Message" ADD FOREIGN KEY ("userID") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "MessageProblem" ADD FOREIGN KEY ("messageID") REFERENCES "Message"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "MessageProblem" ADD FOREIGN KEY ("problemID") REFERENCES "Problem"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "MessageExercise" ADD FOREIGN KEY ("exerciseID") REFERENCES "Exercise"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "MessageExercise" ADD FOREIGN KEY ("messageID") REFERENCES "Message"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "MessageFood" ADD FOREIGN KEY ("messageID") REFERENCES "Message"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "MessageFood" ADD FOREIGN KEY ("foodID") REFERENCES "Food"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Food" ADD FOREIGN KEY ("cookedByID") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Photo" ADD FOREIGN KEY ("foodID") REFERENCES "Food"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Comment" ADD FOREIGN KEY ("userID") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Comment" ADD FOREIGN KEY ("foodID") REFERENCES "Food"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Comment" ADD FOREIGN KEY ("exerciseID") REFERENCES "Exercise"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Comment" ADD FOREIGN KEY ("problemID") REFERENCES "Problem"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Product" ADD FOREIGN KEY ("userID") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "_hasContact" ADD FOREIGN KEY ("A") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "_hasContact" ADD FOREIGN KEY ("B") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "_MuscleHasProblemToProblem" ADD FOREIGN KEY ("A") REFERENCES "MuscleHasProblem"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "_MuscleHasProblemToProblem" ADD FOREIGN KEY ("B") REFERENCES "Problem"("id") ON DELETE CASCADE ON UPDATE CASCADE;

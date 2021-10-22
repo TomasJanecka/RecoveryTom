@@ -106,57 +106,64 @@ router.route("/buy").post(async (request: Request, response: Response) => {
   }
 });
 
-router.route("/favorite").post(async (request: Request, response: Response) => {
-  const queryType = <string>request.query.type;
-  const exerciseID = request.header("X-Exercise");
-  const foodID = request.header("X-Food");
+router
+  .route("/favorite/:type(exercise||food)/:id(\\d+)")
+  .post(async (request: Request, response: Response) => {
+    let newRelation;
+    const paramID = +request.params.id;
+    switch (request.params.type) {
+      case "exercise":
+        if (
+          paramID &&
+          (await prisma.exercise.findUnique({ where: { id: paramID } }))
+        ) {
+          newRelation = await prisma.userFavExercise.create({
+            data: {
+              userID: response.locals.userID,
+              exerciseID: +request.params.id,
+            },
+          });
+        } else {
+          response
+            .status(400)
+            .json({ message: `Wrong header X-Exercise=${request.params.id}!` });
+          return;
+        }
+        break;
+      case "food":
+        if (
+          paramID &&
+          (await prisma.food.findUnique({ where: { id: paramID } }))
+        ) {
+          newRelation = await prisma.userFavExercise.create({
+            data: {
+              userID: response.locals.userID,
+              exerciseID: +request.params.id,
+            },
+          });
+        } else {
+          response
+            .status(400)
+            .json({ message: `Wrong header X-Food=${request.params.id}!` });
+          return;
+        }
+        break;
+      default:
+        response
+          .status(400)
+          .json({ message: `Wrong query parameter=${request.params.id}!` });
+        return;
+    }
 
-  let newRelation;
-  switch (queryType) {
-    case "exercise":
-      if (exerciseID) {
-        newRelation = await prisma.userFavExercise.create({
-          data: {
-            userID: response.locals.userID,
-            exerciseID: +exerciseID,
-          },
-        });
-      } else {
-        response
-          .status(400)
-          .json({ message: `Wrong header X-Exercise=${exerciseID}!` });
-        return;
-      }
-      break;
-    case "food":
-      if (foodID) {
-        newRelation = await prisma.userFavExercise.create({
-          data: {
-            userID: response.locals.userID,
-            exerciseID: +foodID,
-          },
-        });
-      } else {
-        response
-          .status(400)
-          .json({ message: `Wrong header X-Food=${foodID}!` });
-        return;
-      }
-      break;
-    default:
-      response
-        .status(400)
-        .json({ message: `Wrong query parameter=${queryType}!` });
+    if (!newRelation) {
+      response.status(500).json({ message: "Failed to create new relation!" });
       return;
-  }
+    }
 
-  if (!newRelation) {
-    response.status(500).json({ message: "Failed to create new relation!" });
-    return;
-  }
-
-  response.status(200).json({ message: `${queryType} was added to favorite.` });
-});
+    response
+      .status(200)
+      .json({ message: `${request.params.type} was added to favorite.` });
+  });
 
 router.route("/problem").post(async (request: Request, response: Response) => {
   const { name, muscles } = request.body;
@@ -204,7 +211,11 @@ router.route("/problem").post(async (request: Request, response: Response) => {
           problemJoints.add(joint as keyof typeof Joint);
         }
       });
-      problemGroups.add(problemMuscle.muscleGroup);
+      problemMuscle.muscleGroup.map((group) => {
+        if (group) {
+          problemGroups.add(group as keyof typeof MuscleGroup);
+        }
+      });
     }
   }
 
