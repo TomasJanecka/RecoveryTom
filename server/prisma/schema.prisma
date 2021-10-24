@@ -13,6 +13,7 @@ model User {
   name              String            @default("") @db.VarChar(128)
   premiumProblem    Boolean           @default(false)
   premiumDiet       Boolean           @default(false)
+  premiumExercises  Boolean           @default(false)
   age               Int               @default(0) @db.Integer
   darkmode          Boolean           @default(false) @db.Boolean
   points            Int               @default(0) @db.Integer
@@ -42,36 +43,52 @@ model UserProblem {
 }
 
 model Body {
-  user     User     @relation(fields: [userID], references: [id])
-  userID   String   @id @db.VarChar(128)
-  bmr      Int      @default(0) @db.Integer
-  proteins Int      @default(0) @db.Integer
-  carbs    Int      @default(0) @db.Integer
-  fats     Int      @default(0) @db.Integer
-  kg       Int      @default(0) @db.Integer
-  muscles  Muscle[]
+  user     User   @relation(fields: [userID], references: [id])
+  userID   String @id @db.VarChar(128)
+  bmr      Int    @default(0) @db.Integer
+  proteins Int    @default(0) @db.Integer
+  carbs    Int    @default(0) @db.Integer
+  fats     Int    @default(0) @db.Integer
+  kg       Int    @default(0) @db.Integer
 }
 
+// model Muscle {
+//   id          Int                 @id @default(autoincrement()) @db.Integer
+//   name        MuscleID            @unique
+//   problem     MuscleForProblem[]
+//   exercise    MuscleForExercise[]
+//   condition   MuscleCondition     @default(GOOD)
+//   muscleGroup MuscleGroup[]
+//   joints      Joint[]
+// }
+
 model Muscle {
-  id          Int                @id @default(autoincrement())
-  name        MuscleID
-  body        Body               @relation(fields: [bodyID], references: [userID])
-  bodyID      String             @db.VarChar(128)
-  problem     MuscleHasProblem[]
-  condition   MuscleCondition    @default(GOOD)
+  id          MuscleID            @id
+  problem     MuscleForProblem[]
+  exercise    MuscleForExercise[]
+  condition   MuscleCondition     @default(GOOD)
   muscleGroup MuscleGroup[]
   joints      Joint[]
 }
 
+model MuscleForExercise {
+  id         Int      @id @default(autoincrement())
+  exercise   Exercise @relation(fields: [exerciseID], references: [id])
+  exerciseID Int      @db.Integer
+  muscle     Muscle   @relation(fields: [muscleID], references: [id])
+  muscleID   MuscleID
+}
+
 model Exercise {
-  id                       Int                @id @default(autoincrement())
+  id                       Int                 @id @default(autoincrement())
   type                     ExerciseType
-  name                     String             @unique @db.VarChar(30)
+  name                     String              @unique @db.VarChar(30)
   difficulty               ExerciseDifficulty
+  muscles                  MuscleForExercise[]
   favoriteByUser           UserFavExercise[]
   comments                 Comment[]
   message                  MessageExercise[]
-  encodedMuscleEffectivity String[]           @db.VarChar(128)
+  encodedMuscleEffectivity String[]            @db.VarChar(128)
 }
 
 model Problem {
@@ -81,7 +98,7 @@ model Problem {
   user         UserProblem[]
   muscleGroups MuscleGroup[]
   joints       Joint[]
-  muscles      MuscleHasProblem[]
+  muscles      MuscleForProblem[]
   comments     Comment[]
   createdAt    DateTime           @default(now())
   hidden       Boolean            @default(false)
@@ -104,12 +121,12 @@ model UserFavFood {
   foodID Int    @db.Integer
 }
 
-model MuscleHasProblem {
+model MuscleForProblem {
   id        Int       @id @default(autoincrement())
   problem   Problem[] @relation(fields: [problemID], references: [id])
   problemID Int       @db.Integer
   muscle    Muscle    @relation(fields: [muscleID], references: [id])
-  muscleID  Int       @db.Integer
+  muscleID  MuscleID
   createdAt DateTime  @default(now())
   changedAt DateTime  @default(now())
 }

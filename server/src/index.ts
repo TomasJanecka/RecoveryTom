@@ -3,6 +3,7 @@ import express from "express";
 import path from "path";
 import passport from "passport";
 import api from "../api/routes/api";
+import createMuscleTable from "../api/services/createUserBody";
 
 require("../api/services/passport");
 const cookieSession = require("cookie-session");
@@ -12,6 +13,12 @@ const prisma = new PrismaClient();
 const port = process.env.PORT || 5000;
 
 async function main() {
+  if (
+    !(await prisma.muscle.findUnique({ where: { id: MuscleID.OMOHYOIDS } }))
+  ) {
+    await createMuscleTable();
+  }
+
   app.use(
     cookieSession({
       maxAge: 30 * 24 * 60 * 60 * 1000,

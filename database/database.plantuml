@@ -39,7 +39,7 @@ entity MessageFood {
 entity Exercise {
     *id : serial
     --
-    encodedMuscleEffectivity String[]           @db.VarChar(128)
+    *
 }
 
 entity Body {
@@ -96,6 +96,17 @@ entity Muscle {
     *
 }
 
+entity MuscleForExercise {
+    *id : serial
+    --
+    *
+}
+
+entity MuscleForProblem {
+    *id : serial
+    --
+    *
+}
 
 User ||..o{ Comment
 User ||..o{ UserHasContact
@@ -111,7 +122,8 @@ User ||..o{ Message
 User ||..o{ Product
 User ||..|| Body
 Body ||..o{ Problem
-Problem }o..|{ 
+Problem ||..|{ MuscleForProblem
+MuscleForProblem }o..|| Muscle
 
 Message ||..o{ MessageExercise
 MessageExercise }o..|| Exercise
@@ -120,6 +132,8 @@ MessageFood }o..|| Food
 
 Problem ||..o{ Comment
 Exercise ||..o{ Comment
+Exercise ||..|{ MuscleForExercise
+MuscleForExercise }o..|| Muscle
 Food ||..o{ Comment
 Food ||..|{ Photo
 

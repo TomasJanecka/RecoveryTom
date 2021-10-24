@@ -1,73 +1,47 @@
 import { PrismaClient, MuscleID, Joint, MuscleGroup } from "@prisma/client";
-import { response } from "express";
 
 const prisma = new PrismaClient();
 
-async function createBody(userID: string) {
-  const body = await prisma.body.create({
-    data: {
-      userID: userID,
-    },
-  });
-
-  if (!body) {
-    response.status(500).json({ message: "Could not create body." });
-    return;
-  }
-
+async function createMuscleTable() {
   await prisma.muscle.createMany({
     data: [
       {
-        bodyID: userID,
-        name: MuscleID.STERNOHYOID,
+        id: MuscleID.STERNOHYOID,
         joints: [Joint.SHOULDER_CENTER, Joint.HEAD],
         muscleGroup: [MuscleGroup.NECK],
       },
       {
-        bodyID: userID,
-        name: MuscleID.OMOHYOIDS,
+        id: MuscleID.OMOHYOIDS,
         joints: [Joint.SHOULDER_CENTER, Joint.HEAD],
         muscleGroup: [MuscleGroup.NECK],
       },
       {
-        bodyID: userID,
-        name: MuscleID.STERNOCLEIDOMASTEOID,
+        id: MuscleID.STERNOCLEIDOMASTEOID,
         joints: [Joint.SHOULDER_CENTER, Joint.HEAD],
         muscleGroup: [MuscleGroup.NECK],
       },
       {
-        bodyID: userID,
-        name: MuscleID.SEMISPINALIS_CAPITIS,
+        id: MuscleID.SEMISPINALIS_CAPITIS,
         joints: [Joint.SHOULDER_CENTER, Joint.HEAD],
         muscleGroup: [MuscleGroup.NECK],
       },
       {
-        bodyID: userID,
-        name: MuscleID.LEVATOR_SCAPULAE,
+        id: MuscleID.LEVATOR_SCAPULAE,
         joints: [Joint.SHOULDER_CENTER, Joint.HEAD],
         muscleGroup: [MuscleGroup.NECK, MuscleGroup.SCAPULA],
       },
       {
-        bodyID: userID,
-        name: MuscleID.SCALENES,
+        id: MuscleID.SCALENES,
         joints: [Joint.SHOULDER_CENTER, Joint.HEAD],
         muscleGroup: [MuscleGroup.NECK],
       },
       {
-        bodyID: userID,
-        name: MuscleID.PECTORALIS_MAJOR,
+        id: MuscleID.PECTORALIS_MAJOR,
         joints: [Joint.SHOULDER_CENTER],
         muscleGroup: [MuscleGroup.CHEST, MuscleGroup.UPPER_ARM],
       },
       {
-        bodyID: userID,
-        name: MuscleID.PECTORALIS_MAJOR,
-        joints: [Joint.SHOULDER_CENTER],
-        muscleGroup: [MuscleGroup.CHEST, MuscleGroup.UPPER_ARM],
-      },
-      {
-        bodyID: userID,
-        name: MuscleID.PECTORALIS_MINOR,
+        id: MuscleID.PECTORALIS_MINOR,
         joints: [Joint.SHOULDER],
         muscleGroup: [
           MuscleGroup.RIBS,
@@ -76,8 +50,7 @@ async function createBody(userID: string) {
         ],
       },
       {
-        bodyID: userID,
-        name: MuscleID.SERRATUS_ANTERIOR,
+        id: MuscleID.SERRATUS_ANTERIOR,
         joints: [Joint.SHOULDER],
         muscleGroup: [
           MuscleGroup.RIBS,
@@ -86,38 +59,32 @@ async function createBody(userID: string) {
         ],
       },
       {
-        bodyID: userID,
-        name: MuscleID.SUPRASPINATUS,
+        id: MuscleID.SUPRASPINATUS,
         joints: [Joint.SHOULDER],
         muscleGroup: [MuscleGroup.SCAPULA, MuscleGroup.UPPER_ARM],
       },
       {
-        bodyID: userID,
-        name: MuscleID.INFRASPINATUS,
+        id: MuscleID.INFRASPINATUS,
         joints: [Joint.SHOULDER],
         muscleGroup: [MuscleGroup.SCAPULA, MuscleGroup.UPPER_ARM],
       },
       {
-        bodyID: userID,
-        name: MuscleID.TERES_MAJOR,
+        id: MuscleID.TERES_MAJOR,
         joints: [Joint.SHOULDER],
         muscleGroup: [MuscleGroup.SCAPULA, MuscleGroup.UPPER_ARM],
       },
       {
-        bodyID: userID,
-        name: MuscleID.TERES_MINOR,
+        id: MuscleID.TERES_MINOR,
         joints: [Joint.SHOULDER],
         muscleGroup: [MuscleGroup.SCAPULA, MuscleGroup.UPPER_ARM],
       },
       {
-        bodyID: userID,
-        name: MuscleID.SUBSCAPULARIS,
+        id: MuscleID.SUBSCAPULARIS,
         joints: [Joint.SHOULDER],
         muscleGroup: [MuscleGroup.SCAPULA, MuscleGroup.UPPER_ARM],
       },
       {
-        bodyID: userID,
-        name: MuscleID.RHOMBOID_MINOR,
+        id: MuscleID.RHOMBOID_MINOR,
         joints: [Joint.SHOULDER, Joint.SHOULDER_CENTER],
         muscleGroup: [
           MuscleGroup.SCAPULA,
@@ -126,8 +93,7 @@ async function createBody(userID: string) {
         ],
       },
       {
-        bodyID: userID,
-        name: MuscleID.RHOMBOID_MAJOR,
+        id: MuscleID.RHOMBOID_MAJOR,
         joints: [Joint.SHOULDER, Joint.SHOULDER_CENTER],
         muscleGroup: [
           MuscleGroup.SCAPULA,
@@ -136,14 +102,12 @@ async function createBody(userID: string) {
         ],
       },
       {
-        bodyID: userID,
-        name: MuscleID.SERRATUS_POSTERIOR_SUPERIOR,
+        id: MuscleID.SERRATUS_POSTERIOR_SUPERIOR,
         joints: [Joint.SHOULDER_CENTER],
         muscleGroup: [MuscleGroup.RIBS, MuscleGroup.SHOULDER_CENTER],
       },
       {
-        bodyID: userID,
-        name: MuscleID.SERRATUS_POSTERIOR_INFERIOR,
+        id: MuscleID.SERRATUS_POSTERIOR_INFERIOR,
         joints: [Joint.LOW_BACK],
         muscleGroup: [
           MuscleGroup.RIBS,
@@ -152,8 +116,7 @@ async function createBody(userID: string) {
         ],
       },
       {
-        bodyID: userID,
-        name: MuscleID.LATISSIMUS_DORSI,
+        id: MuscleID.LATISSIMUS_DORSI,
         joints: [Joint.LOW_BACK, Joint.SHOULDER],
         muscleGroup: [
           MuscleGroup.LOW_BACK,
@@ -162,8 +125,7 @@ async function createBody(userID: string) {
         ],
       },
       {
-        bodyID: userID,
-        name: MuscleID.TRAPEZIUS,
+        id: MuscleID.TRAPEZIUS,
         joints: [Joint.SHOULDER, Joint.SHOULDER_CENTER, Joint.HEAD],
         muscleGroup: [
           MuscleGroup.NECK,
@@ -172,50 +134,42 @@ async function createBody(userID: string) {
         ],
       },
       {
-        bodyID: userID,
-        name: MuscleID.DELTOID,
+        id: MuscleID.DELTOID,
         joints: [Joint.SHOULDER],
         muscleGroup: [MuscleGroup.UPPER_ARM],
       },
       {
-        bodyID: userID,
-        name: MuscleID.CORACOBRACHIALIS,
+        id: MuscleID.CORACOBRACHIALIS,
         joints: [Joint.SHOULDER],
         muscleGroup: [MuscleGroup.UPPER_ARM, MuscleGroup.SCAPULA],
       },
       {
-        bodyID: userID,
-        name: MuscleID.BICEPS_BRACHII_SHORT,
+        id: MuscleID.BICEPS_BRACHII_SHORT,
         joints: [Joint.SHOULDER, Joint.ELBOW],
         muscleGroup: [MuscleGroup.UPPER_ARM, MuscleGroup.FOREARM],
       },
       {
-        bodyID: userID,
-        name: MuscleID.BICEPS_BRACHII_LONG,
+        id: MuscleID.BICEPS_BRACHII_LONG,
         joints: [Joint.SHOULDER, Joint.ELBOW],
         muscleGroup: [MuscleGroup.UPPER_ARM, MuscleGroup.FOREARM],
       },
       {
-        bodyID: userID,
-        name: MuscleID.TRICEPS_BRACHII,
+        id: MuscleID.TRICEPS_BRACHII,
         joints: [Joint.SHOULDER, Joint.ELBOW],
         muscleGroup: [MuscleGroup.UPPER_ARM, MuscleGroup.FOREARM],
       },
       {
-        bodyID: userID,
-        name: MuscleID.BRACHIORADIALIS,
+        id: MuscleID.BRACHIORADIALIS,
         joints: [Joint.ELBOW],
         muscleGroup: [MuscleGroup.UPPER_ARM, MuscleGroup.FOREARM],
       },
       {
-        bodyID: userID,
-        name: MuscleID.PRONATOR_TERES,
+        id: MuscleID.PRONATOR_TERES,
         joints: [Joint.ELBOW],
         muscleGroup: [MuscleGroup.UPPER_ARM, MuscleGroup.FOREARM],
       },
       {
-        bodyID: userID,
-        name: MuscleID.FLEXOR_CARPI_RADIALIS,
+        id: MuscleID.FLEXOR_CARPI_RADIALIS,
         joints: [Joint.ELBOW, Joint.FINGERS_HAND],
         muscleGroup: [
           MuscleGroup.UPPER_ARM,
@@ -224,8 +178,7 @@ async function createBody(userID: string) {
         ],
       },
       {
-        bodyID: userID,
-        name: MuscleID.FLEXOR_CARPI_ULNARIS,
+        id: MuscleID.FLEXOR_CARPI_ULNARIS,
         joints: [Joint.ELBOW, Joint.FINGERS_HAND],
         muscleGroup: [
           MuscleGroup.UPPER_ARM,
@@ -234,8 +187,7 @@ async function createBody(userID: string) {
         ],
       },
       {
-        bodyID: userID,
-        name: MuscleID.PALMARIS_LONGUS,
+        id: MuscleID.PALMARIS_LONGUS,
         joints: [Joint.ELBOW, Joint.FINGERS_HAND],
         muscleGroup: [
           MuscleGroup.UPPER_ARM,
@@ -244,14 +196,12 @@ async function createBody(userID: string) {
         ],
       },
       {
-        bodyID: userID,
-        name: MuscleID.ANCONEUS,
+        id: MuscleID.ANCONEUS,
         joints: [Joint.ELBOW],
         muscleGroup: [MuscleGroup.UPPER_ARM, MuscleGroup.FOREARM],
       },
       {
-        bodyID: userID,
-        name: MuscleID.EXTENSOR_CARPI_RADIALIS_LONGUS,
+        id: MuscleID.EXTENSOR_CARPI_RADIALIS_LONGUS,
         joints: [Joint.ELBOW, Joint.FINGERS_HAND],
         muscleGroup: [
           MuscleGroup.UPPER_ARM,
@@ -260,8 +210,7 @@ async function createBody(userID: string) {
         ],
       },
       {
-        bodyID: userID,
-        name: MuscleID.EXTENSOR_CARPI_RADIALIS_BREVIS,
+        id: MuscleID.EXTENSOR_CARPI_RADIALIS_BREVIS,
         joints: [Joint.ELBOW, Joint.FINGERS_HAND],
         muscleGroup: [
           MuscleGroup.UPPER_ARM,
@@ -270,8 +219,7 @@ async function createBody(userID: string) {
         ],
       },
       {
-        bodyID: userID,
-        name: MuscleID.EXTENSOR_DIGITORUM,
+        id: MuscleID.EXTENSOR_DIGITORUM,
         joints: [Joint.ELBOW, Joint.FINGERS_HAND],
         muscleGroup: [
           MuscleGroup.UPPER_ARM,
@@ -280,8 +228,7 @@ async function createBody(userID: string) {
         ],
       },
       {
-        bodyID: userID,
-        name: MuscleID.EXTENSOR_POLICIS_LONGUS,
+        id: MuscleID.EXTENSOR_POLICIS_LONGUS,
         joints: [Joint.ELBOW, Joint.FINGERS_HAND],
         muscleGroup: [
           MuscleGroup.UPPER_ARM,
@@ -290,20 +237,17 @@ async function createBody(userID: string) {
         ],
       },
       {
-        bodyID: userID,
-        name: MuscleID.EXTENSOR_POLICIS_BREVIS,
+        id: MuscleID.EXTENSOR_POLICIS_BREVIS,
         joints: [Joint.FINGERS_HAND],
         muscleGroup: [MuscleGroup.FOREARM, MuscleGroup.FINGERS_HAND],
       },
       {
-        bodyID: userID,
-        name: MuscleID.RECTUS_ABDOMINIS,
+        id: MuscleID.RECTUS_ABDOMINIS,
         joints: [],
         muscleGroup: [MuscleGroup.RIBS, MuscleGroup.PELVIS, MuscleGroup.BELLY],
       },
       {
-        bodyID: userID,
-        name: MuscleID.TRANVERSUS_ABDOMINIS,
+        id: MuscleID.TRANVERSUS_ABDOMINIS,
         joints: [Joint.LOW_BACK],
         muscleGroup: [
           MuscleGroup.BELLY,
@@ -313,20 +257,17 @@ async function createBody(userID: string) {
         ],
       },
       {
-        bodyID: userID,
-        name: MuscleID.EXTERNAL_OBLIQUE,
+        id: MuscleID.EXTERNAL_OBLIQUE,
         joints: [],
         muscleGroup: [MuscleGroup.BELLY, MuscleGroup.RIBS, MuscleGroup.PELVIS],
       },
       {
-        bodyID: userID,
-        name: MuscleID.INTERNAL_OBLIQUE,
+        id: MuscleID.INTERNAL_OBLIQUE,
         joints: [],
         muscleGroup: [MuscleGroup.BELLY, MuscleGroup.RIBS, MuscleGroup.PELVIS],
       },
       {
-        bodyID: userID,
-        name: MuscleID.QUADRATUS_LUMBORUM,
+        id: MuscleID.QUADRATUS_LUMBORUM,
         joints: [Joint.LOW_BACK],
         muscleGroup: [
           MuscleGroup.RIBS,
@@ -335,26 +276,22 @@ async function createBody(userID: string) {
         ],
       },
       {
-        bodyID: userID,
-        name: MuscleID.PSOAS_MINOR,
+        id: MuscleID.PSOAS_MINOR,
         joints: [Joint.LOW_BACK],
         muscleGroup: [MuscleGroup.PELVIS, MuscleGroup.SPINE_LOW],
       },
       {
-        bodyID: userID,
-        name: MuscleID.PSOAS_MAJOR,
+        id: MuscleID.PSOAS_MAJOR,
         joints: [Joint.LOW_BACK, Joint.HIP],
         muscleGroup: [MuscleGroup.PELVIS, MuscleGroup.SPINE_LOW],
       },
       {
-        bodyID: userID,
-        name: MuscleID.ILIACUS,
+        id: MuscleID.ILIACUS,
         joints: [Joint.HIP],
         muscleGroup: [MuscleGroup.PELVIS],
       },
       {
-        bodyID: userID,
-        name: MuscleID.SARTORIUS,
+        id: MuscleID.SARTORIUS,
         joints: [Joint.HIP, Joint.KNEE],
         muscleGroup: [
           MuscleGroup.PELVIS,
@@ -363,78 +300,57 @@ async function createBody(userID: string) {
         ],
       },
       {
-        bodyID: userID,
-        name: MuscleID.SARTORIUS,
-        joints: [Joint.HIP, Joint.KNEE],
-        muscleGroup: [
-          MuscleGroup.PELVIS,
-          MuscleGroup.THIGH_FRONT,
-          MuscleGroup.THIGH_BACK,
-        ],
-      },
-      {
-        bodyID: userID,
-        name: MuscleID.TENSOR_FASCIAE_LATAE,
+        id: MuscleID.TENSOR_FASCIAE_LATAE,
         joints: [Joint.HIP],
         muscleGroup: [MuscleGroup.PELVIS, MuscleGroup.THIGH_FRONT],
       },
       {
-        bodyID: userID,
-        name: MuscleID.RECTUS_FEMORIS,
+        id: MuscleID.RECTUS_FEMORIS,
         joints: [Joint.HIP, Joint.KNEE],
         muscleGroup: [MuscleGroup.THIGH_FRONT],
       },
       {
-        bodyID: userID,
-        name: MuscleID.VASTUS_LATERALIS,
+        id: MuscleID.VASTUS_LATERALIS,
         joints: [Joint.HIP, Joint.KNEE],
         muscleGroup: [MuscleGroup.THIGH_FRONT],
       },
       {
-        bodyID: userID,
-        name: MuscleID.VASTUS_MEDIALIS,
+        id: MuscleID.VASTUS_MEDIALIS,
         joints: [Joint.HIP, Joint.KNEE],
         muscleGroup: [MuscleGroup.THIGH_FRONT],
       },
       {
-        bodyID: userID,
-        name: MuscleID.GRACILIS,
+        id: MuscleID.GRACILIS,
         joints: [Joint.HIP, Joint.KNEE],
         muscleGroup: [MuscleGroup.THIGH_FRONT, MuscleGroup.THIGH_BACK],
       },
       {
-        bodyID: userID,
-        name: MuscleID.ADDUCTOR_LONGUS,
+        id: MuscleID.ADDUCTOR_LONGUS,
         joints: [Joint.HIP],
         muscleGroup: [MuscleGroup.THIGH_FRONT, MuscleGroup.THIGH_BACK],
       },
       {
-        bodyID: userID,
-        name: MuscleID.GLUTEUS_MAXIMUS,
+        id: MuscleID.GLUTEUS_MAXIMUS,
         joints: [Joint.HIP, Joint.COCCYGIS],
         muscleGroup: [MuscleGroup.THIGH_BACK, MuscleGroup.PELVIS],
       },
       {
-        bodyID: userID,
-        name: MuscleID.GLUTEUS_MEDIUS,
+        id: MuscleID.GLUTEUS_MEDIUS,
         joints: [Joint.HIP],
         muscleGroup: [MuscleGroup.THIGH_BACK, MuscleGroup.PELVIS],
       },
       {
-        bodyID: userID,
-        name: MuscleID.GLUTEUS_MINIMUS,
+        id: MuscleID.GLUTEUS_MINIMUS,
         joints: [Joint.HIP],
         muscleGroup: [MuscleGroup.THIGH_BACK, MuscleGroup.PELVIS],
       },
       {
-        bodyID: userID,
-        name: MuscleID.PIRIFORMIS,
+        id: MuscleID.PIRIFORMIS,
         joints: [Joint.HIP, Joint.COCCYGIS],
         muscleGroup: [MuscleGroup.THIGH_BACK, MuscleGroup.PELVIS],
       },
       {
-        bodyID: userID,
-        name: MuscleID.ADDUCTOR_MAGNUS,
+        id: MuscleID.ADDUCTOR_MAGNUS,
         joints: [Joint.HIP, Joint.KNEE],
         muscleGroup: [
           MuscleGroup.THIGH_BACK,
@@ -443,68 +359,57 @@ async function createBody(userID: string) {
         ],
       },
       {
-        bodyID: userID,
-        name: MuscleID.BICEPS_FEMORIS,
+        id: MuscleID.BICEPS_FEMORIS,
         joints: [Joint.HIP, Joint.KNEE],
         muscleGroup: [MuscleGroup.THIGH_BACK, MuscleGroup.PELVIS],
       },
       {
-        bodyID: userID,
-        name: MuscleID.SEMITENDINOSUS,
+        id: MuscleID.SEMITENDINOSUS,
         joints: [Joint.HIP, Joint.KNEE],
         muscleGroup: [MuscleGroup.THIGH_BACK, MuscleGroup.PELVIS],
       },
       {
-        bodyID: userID,
-        name: MuscleID.GASTROCNEMIUS,
+        id: MuscleID.GASTROCNEMIUS,
         joints: [Joint.KNEE, Joint.ANKLE],
         muscleGroup: [MuscleGroup.CALF_BACK],
       },
       {
-        bodyID: userID,
-        name: MuscleID.POPLITERIUS,
+        id: MuscleID.POPLITERIUS,
         joints: [Joint.KNEE],
         muscleGroup: [MuscleGroup.CALF_BACK],
       },
       {
-        bodyID: userID,
-        name: MuscleID.PLANTARIS,
+        id: MuscleID.PLANTARIS,
         joints: [Joint.KNEE, Joint.ANKLE],
         muscleGroup: [MuscleGroup.CALF_BACK],
       },
       {
-        bodyID: userID,
-        name: MuscleID.FIBULARIS_LONGUS,
+        id: MuscleID.FIBULARIS_LONGUS,
         joints: [Joint.ANKLE],
         muscleGroup: [MuscleGroup.CALF_FRONT],
       },
       {
-        bodyID: userID,
-        name: MuscleID.TIBIALIS_ANTERIOR,
+        id: MuscleID.TIBIALIS_ANTERIOR,
         joints: [Joint.ANKLE],
         muscleGroup: [MuscleGroup.CALF_FRONT],
       },
       {
-        bodyID: userID,
-        name: MuscleID.EXTENSOR_DIGITORUM_LONGUS,
+        id: MuscleID.EXTENSOR_DIGITORUM_LONGUS,
         joints: [Joint.ANKLE, Joint.FINGERS_FOOT],
         muscleGroup: [MuscleGroup.CALF_FRONT, MuscleGroup.FINGERS_FOOT],
       },
       {
-        bodyID: userID,
-        name: MuscleID.ETENSOR_HALLUCIS_LONGUS,
+        id: MuscleID.ETENSOR_HALLUCIS_LONGUS,
         joints: [Joint.ANKLE, Joint.FINGERS_FOOT],
         muscleGroup: [MuscleGroup.CALF_FRONT, MuscleGroup.FINGERS_FOOT],
       },
       {
-        bodyID: userID,
-        name: MuscleID.SOLEUS,
+        id: MuscleID.SOLEUS,
         joints: [Joint.ANKLE],
         muscleGroup: [MuscleGroup.CALF_BACK],
       },
       {
-        bodyID: userID,
-        name: MuscleID.FIBULARIS_TERTIUS,
+        id: MuscleID.FIBULARIS_TERTIUS,
         joints: [Joint.ANKLE],
         muscleGroup: [MuscleGroup.CALF_FRONT, MuscleGroup.FINGERS_FOOT],
       },
@@ -535,4 +440,4 @@ async function createBody(userID: string) {
 
 // const serratusAnterior = prisma;
 
-export default createBody;
+export default createMuscleTable;

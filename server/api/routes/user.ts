@@ -165,75 +165,75 @@ router
       .json({ message: `${request.params.type} was added to favorite.` });
   });
 
-router.route("/problem").post(async (request: Request, response: Response) => {
-  const { name, muscles } = request.body;
-  const muscleNames = Object.values(MuscleID).map((muscle) => {
-    return muscle.toString();
-  });
-
-  const usersBodyMuscles: UsersBody | null = await prisma.body.findUnique({
-    where: { userID: response.locals.userID },
-    include: { muscles: true },
-  });
-
-  let bodyMuscles: Muscle[] = [];
-  if (usersBodyMuscles) {
-    bodyMuscles = usersBodyMuscles.muscles;
-  } else {
-    response
-      .status(500)
-      .json({ message: "Failed to load users body muscles!" });
-    return;
-  }
-
-  let newProblem = await prisma.problem.create({
-    data: {
-      name: name.toString(),
-    },
-  });
-
-  let problemJoints: Set<Joint> = new Set();
-  let problemGroups: Set<MuscleGroup> = new Set();
-
-  for (const muscle of muscles) {
-    if (!muscleNames.includes(muscle)) {
-      response.status(400).json({ message: `Wrong muscle=${muscle}!` });
-      await prisma.problem.delete({ where: { id: newProblem.id } });
-      return;
-    }
-    const problemMuscle = bodyMuscles.find(
-      (actMuscle) => actMuscle.name === muscle
-    );
-
-    if (problemMuscle) {
-      problemMuscle.joints.map((joint) => {
-        if (joint) {
-          problemJoints.add(joint as keyof typeof Joint);
-        }
-      });
-      problemMuscle.muscleGroup.map((group) => {
-        if (group) {
-          problemGroups.add(group as keyof typeof MuscleGroup);
-        }
-      });
-    }
-  }
-
-  newProblem = await prisma.problem.update({
-    where: { id: newProblem.id },
-    data: {
-      joints: [...problemJoints],
-      muscleGroups: [...problemGroups],
-    },
-  });
-
-  if (!newProblem) {
-    response.status(500).json({ message: "Failed to create user's problem!" });
-    return;
-  }
-
-  response.status(200).json({ message: `Problem created.` });
-});
+// router.route("/problem").post(async (request: Request, response: Response) => {
+//   const { name, muscles } = request.body;
+//   const muscleNames = Object.values(MuscleID).map((muscle) => {
+//     return muscle.toString();
+//   });
+//
+//   const usersBodyMuscles: UsersBody | null = await prisma.body.findUnique({
+//     where: { userID: response.locals.userID },
+//     include: { muscles: true },
+//   });
+//
+//   let bodyMuscles: Muscle[] = [];
+//   if (usersBodyMuscles) {
+//     bodyMuscles = usersBodyMuscles.muscles;
+//   } else {
+//     response
+//       .status(500)
+//       .json({ message: "Failed to load users body muscles!" });
+//     return;
+//   }
+//
+//   let newProblem = await prisma.problem.create({
+//     data: {
+//       name: name.toString(),
+//     },
+//   });
+//
+//   let problemJoints: Set<Joint> = new Set();
+//   let problemGroups: Set<MuscleGroup> = new Set();
+//
+//   for (const muscle of muscles) {
+//     if (!muscleNames.includes(muscle)) {
+//       response.status(400).json({ message: `Wrong muscle=${muscle}!` });
+//       await prisma.problem.delete({ where: { id: newProblem.id } });
+//       return;
+//     }
+//     const problemMuscle = bodyMuscles.find(
+//       (actMuscle) => actMuscle.name === muscle
+//     );
+//
+//     if (problemMuscle) {
+//       problemMuscle.joints.map((joint) => {
+//         if (joint) {
+//           problemJoints.add(joint as keyof typeof Joint);
+//         }
+//       });
+//       problemMuscle.muscleGroup.map((group) => {
+//         if (group) {
+//           problemGroups.add(group as keyof typeof MuscleGroup);
+//         }
+//       });
+//     }
+//   }
+//
+//   newProblem = await prisma.problem.update({
+//     where: { id: newProblem.id },
+//     data: {
+//       joints: [...problemJoints],
+//       muscleGroups: [...problemGroups],
+//     },
+//   });
+//
+//   if (!newProblem) {
+//     response.status(500).json({ message: "Failed to create user's problem!" });
+//     return;
+//   }
+//
+//   response.status(200).json({ message: `Problem created.` });
+// });
 
 router.route("/message").post(async (request: Request, response: Response) => {
   const { text, exerciseID, foodID, problemID } = request.body;
