@@ -1,0 +1,398 @@
+@startuml
+
+entity Contact {
+    id : serial
+}
+
+entity User {
+    id                String            @id @db.VarChar(128)
+    email             String            @default("") @db.VarChar(128)
+    name              String            @default("") @db.VarChar(128)
+    premiumProblem    Boolean           @default(false)
+    premiumDiet       Boolean           @default(false)
+    premiumExercises  Boolean           @default(false)
+    age               Int               @default(0) @db.Integer
+    darkmode          Boolean           @default(false) @db.Boolean
+    points            Int               @default(0) @db.Integer
+    picture           String            @default("") @db.VarChar(128)
+    location          String            @default("") @db.VarChar(10)
+    signedAt          DateTime          @default(now())
+    rightHand         Boolean           @default(true)
+    body              Body?
+    comments          Comment[]
+    favoriteFood      UserFavFood[]
+    cookedFood        Food[]
+    problems          UserFavProblem[]
+    favoriteExercises UserFavExercise[]
+    messages          Message[]
+    products          Product[]
+    hasContacts       User[]            @relation("hasContact", references: [id])
+    isContact         User[]            @relation("hasContact", references: [id])
+}
+
+entity UserFavProblem {
+    id        Int     @id @default(autoincrement()) @db.Integer
+    user      User    @relation(fields: [userID], references: [id])
+    userID    String  @db.VarChar(128)
+    problem   Problem @relation(fields: [problemID], references: [id])
+    problemID Int     @db.Integer
+    liked     Boolean @default(false) @db.Boolean
+}
+
+entity Body {
+    user     User   @relation(fields: [userID], references: [id])
+    userID   String @id @db.VarChar(128)
+    bmr      Int    @default(0) @db.Integer
+    proteins Int    @default(0) @db.Integer
+    carbs    Int    @default(0) @db.Integer
+    fats     Int    @default(0) @db.Integer
+    kg       Int    @default(0) @db.Integer
+}
+
+entity Muscle {
+    id          MuscleID            @id
+    problem     MuscleForProblem[]
+    exercise    MuscleForExercise[]
+    condition   MuscleCondition     @default(GOOD)
+    muscleGroup MuscleGroup[]
+    joints      Joint[]
+}
+
+entity MuscleForExercise {
+    id         Int      @id @default(autoincrement())
+    exercise   Exercise @relation(fields: [exerciseID], references: [id])
+    exerciseID Int      @db.Integer
+    muscle     Muscle   @relation(fields: [muscleID], references: [id])
+    muscleID   MuscleID
+}
+
+entity Exercise {
+    id                       Int                 @id @default(autoincrement())
+    type                     ExerciseType
+    name                     String              @unique @db.VarChar(30)
+    difficulty               ExerciseDifficulty
+    muscles                  MuscleForExercise[]
+    favoriteByUser           UserFavExercise[]
+    comments                 Comment[]
+    message                  MessageExercise[]
+    encodedMuscleEffectivity String[]            @db.VarChar(128)
+}
+
+entity Problem {
+    id           Int                @id @default(autoincrement()) @db.Integer
+    name         String?            @default("") @db.VarChar(128)
+    description  String?            @default("") @db.VarChar(128)
+    user         UserFavProblem[]
+    muscleGroups MuscleGroup[]
+    joints       Joint[]
+    muscles      MuscleForProblem[]
+    comments     Comment[]
+    createdAt    DateTime           @default(now())
+    hidden       Boolean            @default(false)
+    messages     MessageProblem[]
+}
+
+entity UserFavExercise {
+    id         Int      @id @default(autoincrement())
+    user       User     @relation(fields: [userID], references: [id])
+    userID     String   @db.VarChar(128)
+    exercise   Exercise @relation(fields: [exerciseID], references: [id])
+    exerciseID Int      @db.Integer
+}
+
+entity UserFavFood {
+    id     Int    @id @default(autoincrement())
+    user   User   @relation(fields: [userID], references: [id])
+    userID String @db.VarChar(128)
+    food   Food   @relation(fields: [foodID], references: [id])
+    foodID Int    @db.Integer
+}
+
+entity MuscleForProblem {
+    id        Int       @id @default(autoincrement())
+    problem   Problem[] @relation(fields: [problemID], references: [id])
+    problemID Int       @db.Integer
+    muscle    Muscle    @relation(fields: [muscleID], references: [id])
+    muscleID  MuscleID
+    createdAt DateTime  @default(now())
+    changedAt DateTime  @default(now())
+}
+
+entity Message {
+    id        Int               @id @default(autoincrement()) @db.Integer
+    text      String            @default("") @db.VarChar(128)
+    exercises MessageExercise[]
+    food      MessageFood[]
+    problem   MessageProblem[]
+    user      User              @relation(fields: [userID], references: [id])
+    userID    String            @db.VarChar(128)
+    createdAt DateTime          @default(now())
+    editedAt  DateTime          @default(now())
+    hidden    Boolean           @default(false)
+}
+
+entity MessageProblem {
+    id        Int     @id @default(autoincrement()) @db.Integer
+    message   Message @relation(fields: [messageID], references: [id])
+    messageID Int     @db.Integer
+    problem   Problem @relation(fields: [problemID], references: [id])
+    problemID Int     @db.Integer
+}
+
+entity MessageExercise {
+    id         Int      @id @default(autoincrement()) @db.Integer
+    exercise   Exercise @relation(fields: [exerciseID], references: [id])
+    exerciseID Int      @db.Integer
+    message    Message  @relation(fields: [messageID], references: [id])
+    messageID  Int      @db.Integer
+}
+
+entity MessageFood {
+    id        Int     @id @default(autoincrement()) @db.Integer
+    message   Message @relation(fields: [messageID], references: [id])
+    messageID Int     @db.Integer
+    food      Food    @relation(fields: [foodID], references: [id])
+    foodID    Int     @db.Integer
+}
+
+entity Food {
+    id             Int            @id @default(autoincrement()) @db.Integer
+    name           String         @default("") @db.VarChar(30)
+    proteins       Int            @default(0) @db.Integer
+    carbs          Int            @default(0) @db.Integer
+    fats           Int            @default(0) @db.Integer
+    kcal           Int            @default(0) @db.Integer
+    description    String         @db.VarChar(128)
+    category       FoodCategory[]
+    photos         Photo[]
+    ingredients    String[]
+    comments       Comment[]
+    message        MessageFood[]
+    favoriteBy     UserFavFood[]
+    cookedBy       User           @relation(fields: [cookedByID], references: [id])
+    cookedByID     String         @db.VarChar(128)
+    createdAt      DateTime       @default(now())
+    editedAt       DateTime       @default(now())
+    hidden         Boolean        @default(false)
+    favoriteByUser String[]
+
+    @@unique([cookedByID, name])
+}
+
+enum FoodCategory {
+    MEAL
+    DESSERT
+    BREAKFAST
+    FAST
+}
+
+entity Photo {
+    id     Int     @id @default(autoincrement()) @db.Integer
+    url    String  @db.VarChar(128)
+    food   Food    @relation(fields: [foodID], references: [id])
+    foodID Int     @db.Integer
+    hidden Boolean @default(false)
+}
+
+entity Comment {
+    id         Int         @id @default(autoincrement()) @db.Integer
+    text       String      @db.VarChar(128)
+    user       User        @relation(fields: [userID], references: [id])
+    userID     String      @db.VarChar(128)
+    food       Food?       @relation(fields: [foodID], references: [id])
+    foodID     Int         @db.Integer
+    exercise   Exercise?   @relation(fields: [exerciseID], references: [id])
+    exerciseID Int         @db.Integer
+    problem    Problem?    @relation(fields: [problemID], references: [id])
+    problemID  Int
+    likes      Int         @default(0) @db.Integer
+    type       CommentType
+    createdAt  DateTime    @default(now())
+    editedAt   DateTime    @default(now())
+    hidden     Boolean     @default(false)
+}
+
+entity Product {
+    id     Int    @id @default(autoincrement()) @db.Integer
+    name   String @db.VarChar(20)
+    price  Int    @default(0) @db.Integer
+    user   User   @relation(fields: [userID], references: [id])
+    userID String @db.VarChar(128)
+}
+
+enum ExerciseDifficulty {
+    EASY
+    MEDIUM
+    HARD
+}
+
+enum MuscleCondition {
+    WEAK
+    GOOD
+    STRETCHED_OUT
+}
+
+enum CommentType {
+    EXERCISE
+    FOOD
+    PROBLEM
+}
+
+enum ExerciseType {
+    STRETCH
+    STRENGTH
+    MASAGE
+    ENDURANCE
+    TEST
+}
+
+enum Joint {
+    HEAD
+    SHOULDER_CENTER
+    SHOULDER
+    ELBOW
+    WRIST
+    FINGERS_HAND
+    LOW_BACK
+    HIP
+    KNEE
+    ANKLE
+    FINGERS_FOOT
+    COCCYGIS
+}
+
+enum MuscleGroup {
+    NECK
+    SHOULDER_CENTER
+    CHEST
+    UPPER_ARM
+    SCAPULA
+    RIBS
+    FOREARM
+    SPINE_UP
+    SPINE_LOW
+    LOW_BACK
+    PELVIS
+    BELLY
+    THIGH_FRONT
+    THIGH_BACK
+    CALF_BACK
+    CALF_FRONT
+    FINGERS_HAND
+    FINGERS_FOOT
+}
+
+enum MuscleID {
+    STERNOHYOID
+    OMOHYOIDS
+    STERNOCLEIDOMASTEOID
+    SEMISPINALIS_CAPITIS
+    SPLENIUS_CAPITIS
+    LEVATOR_SCAPULAE
+    SCALENES
+
+    PECTORALIS_MAJOR
+    PECTORALIS_MINOR
+    SERRATUS_ANTERIOR
+
+    SUPRASPINATUS
+    INFRASPINATUS
+    TERES_MAJOR
+    TERES_MINOR
+    SUBSCAPULARIS
+
+    RHOMBOID_MINOR
+    RHOMBOID_MAJOR
+    SERRATUS_POSTERIOR_SUPERIOR
+    SERRATUS_POSTERIOR_INFERIOR
+    LATISSIMUS_DORSI
+    TRAPEZIUS
+
+    DELTOID
+    CORACOBRACHIALIS
+    BICEPS_BRACHII_SHORT
+    BICEPS_BRACHII_LONG
+
+    TRICEPS_BRACHII
+
+    BRACHIORADIALIS
+    PRONATOR_TERES
+    FLEXOR_CARPI_RADIALIS
+    FLEXOR_CARPI_ULNARIS
+    PALMARIS_LONGUS
+    ANCONEUS
+    EXTENSOR_CARPI_RADIALIS_LONGUS
+    EXTENSOR_CARPI_RADIALIS_BREVIS
+    EXTENSOR_DIGITORUM
+    EXTENSOR_POLICIS_LONGUS
+    EXTENSOR_POLICIS_BREVIS
+
+    RECTUS_ABDOMINIS
+    TRANVERSUS_ABDOMINIS
+    EXTERNAL_OBLIQUE
+    INTERNAL_OBLIQUE
+
+    QUADRATUS_LUMBORUM
+    PSOAS_MINOR
+    PSOAS_MAJOR
+    ILIACUS
+    SARTORIUS
+
+    TENSOR_FASCIAE_LATAE
+    RECTUS_FEMORIS
+    VASTUS_LATERALIS
+    VASTUS_MEDIALIS
+    GRACILIS
+    ADDUCTOR_LONGUS
+
+    GLUTEUS_MAXIMUS
+    GLUTEUS_MEDIUS
+    GLUTEUS_MINIMUS
+    PIRIFORMIS
+    ADDUCTOR_MAGNUS
+    BICEPS_FEMORIS
+    SEMITENDINOSUS
+    SEMIMEMBRANOSUS
+
+    GASTROCNEMIUS
+    POPLITERIUS
+    PLANTARIS
+
+    FIBULARIS_LONGUS
+    TIBIALIS_ANTERIOR
+    EXTENSOR_DIGITORUM_LONGUS
+    ETENSOR_HALLUCIS_LONGUS
+    SOLEUS
+    FIBULARIS_TERTIUS
+}
+
+User ||..o{ Comment
+User ||..o{ Contact
+Contact }o..|| User
+User ||..o{ Food : hasCooked
+User ||..o{ UserFavProblem
+UserFavProblem }o..|| Problem
+User ||..o{ UserFavExercise
+UserFavExercise }o..|| Exercise
+User ||..o{ UserFavFood
+UserFavFood }o..|| Food
+User ||..o{ Message
+User ||..o{ Product
+User ||..|| Body
+Body ||..o{ Problem
+Problem ||..|{ MuscleForProblem
+MuscleForProblem }o..|| Muscle
+
+Message ||..o{ MessageExercise
+MessageExercise }o..|| Exercise
+Message ||..o{ MessageFood
+MessageFood }o..|| Food
+
+Problem ||..o{ Comment
+Exercise ||..o{ Comment
+Exercise ||..|{ MuscleForExercise
+MuscleForExercise }o..|| Muscle
+Food ||..o{ Comment
+Food ||..|{ Photo
+
+@enduml

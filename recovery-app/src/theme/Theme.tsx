@@ -1,22 +1,29 @@
 import React, { FC } from "react";
 import { ThemeProvider } from "styled-components";
 
-const theme = {
-  colors: {
-    main: "#FFFDF9",
-    second: "#06B49A",
-    text: "#AFDBD2",
-  },
+const defaultTheme = {
+  fontSize: "16px",
   fonts: ["sans-serif", "Roboto"],
 };
 
-const darkTheme = {
+const theme = {
+  ...defaultTheme,
   colors: {
-    main: "#2F4DF9",
+    main: "#dfcc74",
+    second: "#06B49A",
+    third: "#F1B888",
+    text: "#AFDBD2",
+  },
+};
+
+const darkTheme = {
+  ...defaultTheme,
+  colors: {
+    main: "#dfcc74",
     second: "#0FB111",
+    third: "#F1B888",
     text: "#AFFFD5",
   },
-  fonts: ["sans-serif", "Roboto"],
 };
 
 const Theme: FC<{ darkMode: boolean }> = ({ children, darkMode }) => (

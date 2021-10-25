@@ -1,4 +1,4 @@
-import { PrismaClient, MuscleID, MuscleGroup, Joint } from "@prisma/client";
+import { PrismaClient, MuscleID } from "@prisma/client";
 import express from "express";
 import path from "path";
 import passport from "passport";
@@ -39,23 +39,6 @@ async function main() {
   // await prisma.body.create({
   //   data: {
   //     userID: "109393565192571700735",
-  //   },
-  // });
-  //
-  // await prisma.muscle.create({
-  //   data: {
-  //     name: MuscleID.PECTORALIS_MINOR,
-  //     bodyID: "109393565192571700735",
-  //     muscleGroup: MuscleGroup.CHEST,
-  //     joints: [Joint.SHOULDER, Joint.NECK, Joint.SHOULDER_CENTER],
-  //   },
-  // });
-  //
-  // await prisma.muscle.create({
-  //   data: {
-  //     name: MuscleID.RHOMBOID_MINOR,
-  //     bodyID: "109393565192571700735",
-  //     muscleGroup: MuscleGroup.SCAPULA,
   //   },
   // });
 
