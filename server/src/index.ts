@@ -13,11 +13,11 @@ const prisma = new PrismaClient();
 const port = process.env.PORT || 5000;
 
 async function main() {
-  if (
-    !(await prisma.muscle.findUnique({ where: { id: MuscleID.OMOHYOIDS } }))
-  ) {
-    await createMuscleTable();
-  }
+  // if (
+  //   !(await prisma.muscle.findUnique({ where: { id: MuscleID.OMOHYOIDS } }))
+  // ) {
+  //   await createMuscleTable();
+  // }
 
   app.use(
     cookieSession({
