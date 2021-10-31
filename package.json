@@ -8,7 +8,7 @@
     "start": "ts-node server/src/index.ts",
     "start:dev": "ts-node-dev --respawn -- server/src/index.ts",
     "migrate": "prisma migrate dev --schema=./server/prisma/schema.prisma",
-    "heroku-postbuild": "npm install --prefix recovery-app --dev && npm run build --prefix recovery-app"
+    "heroku-postbuild": "npm install --prefix recovery-app -f --dev && npm run build --prefix recovery-app"
   },
   "prisma": {
     "schema": "./server/prisma/schema.prisma"
