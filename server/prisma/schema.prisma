@@ -9,7 +9,7 @@ datasource db {
 
 model User {
   id                String            @id @db.VarChar(128)
-  isLogged          Int               @db.Integer
+  isLogged          Int               @db.Integer @default(false)
   email             String            @default("") @db.VarChar(128)
   name              String            @default("") @db.VarChar(128)
   premiumProblem    Boolean           @default(false)
