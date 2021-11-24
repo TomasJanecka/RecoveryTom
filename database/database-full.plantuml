@@ -387,6 +387,8 @@ Message ||..o{ MessageExercise
 MessageExercise }o..|| Exercise
 Message ||..o{ MessageFood
 MessageFood }o..|| Food
+Message ||..o{ MessageProblem
+MessageProblem }o..|| Problem
 
 Problem ||..o{ Comment
 Exercise ||..o{ Comment

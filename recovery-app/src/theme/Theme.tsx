@@ -4,6 +4,7 @@ import { ThemeProvider } from "styled-components";
 const defaultTheme = {
   fontSize: "16px",
   fonts: ["sans-serif", "Roboto"],
+  userWidth: "90vw",
 };
 
 const theme = {
@@ -11,7 +12,7 @@ const theme = {
   colors: {
     main: "#dfcc74",
     second: "#06B49A",
-    third: "#F1B888",
+    third: "#9FD108",
     text: "#AFDBD2",
   },
 };
@@ -19,7 +20,7 @@ const theme = {
 const darkTheme = {
   ...defaultTheme,
   colors: {
-    main: "#dfcc74",
+    main: "#Afcc74",
     second: "#0FB111",
     third: "#F1B888",
     text: "#AFFFD5",

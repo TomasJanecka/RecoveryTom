@@ -1,7 +1,12 @@
 import React, { useEffect, useState } from "react";
 import "./App.css";
-import ReactGA from "react-ga";
-import { BrowserRouter as Router, Link, Route, Switch } from "react-router-dom";
+import ReactGA, { ga } from "react-ga";
+import {
+  BrowserRouter as Router,
+  Route,
+  Switch,
+  useLocation,
+} from "react-router-dom";
 import { Muscles } from "./containers/Muscles";
 import { Home } from "./containers/Home";
 import { Exercises } from "./containers/Exercises";
@@ -11,12 +16,10 @@ import styled from "styled-components";
 import { NavigationBar } from "./navigation/NavigationBar";
 import { Food } from "./containers/Food";
 import { Problem } from "./containers/Problem";
-import { Backdrop } from "./UI/Backdrop";
-import { UsersNavigation } from "./navigation/UsersNavigation";
+import { useRecoilState } from "recoil";
+import { user } from "./store/atoms";
 
 const TRACKING_ID = "G-WM9B8LTMQ2";
-
-const DARK_MODE = true;
 
 const StyledApp = styled.div<{ theme: any }>`
   font-size: ${(props) => props.theme.fontSize};
@@ -26,6 +29,13 @@ const StyledApp = styled.div<{ theme: any }>`
 
 function App() {
   const [showUserNavbar, setShowUserNavbar] = useState(false);
+  const [userInfo] = useRecoilState(user);
+  // function usePageViews() {
+  //   let location = useLocation();
+  //   React.useEffect(() => {
+  //     ga.send(["pageview", location.pathname]);
+  //   }, [location]);
+  // }
 
   const toggleUserNavbar = () => {
     setShowUserNavbar((prevState) => !prevState);
@@ -33,11 +43,11 @@ function App() {
 
   useEffect(() => {
     ReactGA.initialize(TRACKING_ID);
-    ReactGA.pageview("/");
+    ReactGA.pageview(window.location.pathname + window.location.search);
   }, []);
 
   return (
-    <Theme darkMode={DARK_MODE}>
+    <Theme darkMode={userInfo.darkMode}>
       <Router>
         <StyledApp>
           <Switch>
@@ -57,13 +67,14 @@ function App() {
               <Exercises />
             </Route>
             <Route path={"/user"}>
-              <User />
+              {showUserNavbar && (
+                <User
+                  toggleUserNavbar={toggleUserNavbar}
+                  showUserNavbar={showUserNavbar}
+                />
+              )}
             </Route>
           </Switch>
-          <UsersNavigation
-            showUserNavbar={showUserNavbar}
-            toggleUserNavbar={toggleUserNavbar}
-          />
           <NavigationBar toggleUserNavbar={toggleUserNavbar} />
         </StyledApp>
       </Router>

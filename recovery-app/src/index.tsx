@@ -5,11 +5,15 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { setToLS } from "./utils/storage";
 import * as themes from "./theme/schema.json";
+import { RecoilRoot } from "recoil";
+import { Router } from "react-router-dom";
 
 setToLS("all-themes", themes.data);
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <RecoilRoot>
+      <App />
+    </RecoilRoot>
   </React.StrictMode>,
   document.getElementById("root")
 );

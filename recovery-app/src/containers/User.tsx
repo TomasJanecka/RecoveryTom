@@ -1,5 +1,7 @@
 import styled from "styled-components";
-import { useState } from "react";
+import React, { useState } from "react";
+import { UsersNavigation } from "../navigation/UsersNavigation";
+import { Backdrop } from "../UI/Backdrop";
 
 const StyledUserMenu = styled.div`
   width: 90vw;
@@ -11,12 +13,17 @@ const StyledUserMenu = styled.div`
   background-color: cadetblue;
 `;
 
-export const User = () => {
-  const [isOpen, setIsOpen] = useState(false);
-
-  const openUserMenu = () => {
-    setIsOpen(!isOpen);
-  };
-
-  return <StyledUserMenu>.</StyledUserMenu>;
+export const User: React.FC<{
+  showUserNavbar: boolean;
+  toggleUserNavbar: () => void;
+}> = (props) => {
+  return (
+    <StyledUserMenu>
+      <Backdrop show={props.showUserNavbar} cancel={props.toggleUserNavbar} />
+      <UsersNavigation
+        showUserNavbar={props.showUserNavbar}
+        toggleUserNavbar={props.toggleUserNavbar}
+      />
+    </StyledUserMenu>
+  );
 };

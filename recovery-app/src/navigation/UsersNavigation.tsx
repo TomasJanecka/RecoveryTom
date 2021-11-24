@@ -1,39 +1,40 @@
 import styled from "styled-components";
 import { media } from "../theme/media";
-import { Link, NavLink } from "react-router-dom";
-import SideButtonImage from "../assets/images/side-button.png";
+import { NavLink, useRouteMatch } from "react-router-dom";
 import React, { Fragment, useState } from "react";
-import { SideButton } from "./SideButton";
-import { Backdrop } from "../UI/Backdrop";
 
 export const UsersNavigation: React.FC<{
   showUserNavbar: boolean;
   toggleUserNavbar: () => void;
 }> = (props) => {
-  console.log(props.showUserNavbar);
+  const { path, url } = useRouteMatch();
+
   return (
     <Fragment>
-      <Backdrop show={props.showUserNavbar} cancel={props.toggleUserNavbar} />
       {props.showUserNavbar && (
         <StyledNavigationBar>
           <MenuList>
             <ListItem>
-              <StyledLink exact to="/messages" activeStyle={{ opacity: 1 }}>
+              <StyledLink
+                exact
+                to={`${path}/messages`}
+                activeStyle={{ opacity: 1 }}
+              >
                 messages
               </StyledLink>
             </ListItem>
             <ListItem>
-              <StyledLink to={"/problems"} activeStyle={{ opacity: 1 }}>
+              <StyledLink to={`${path}/problems`} activeStyle={{ opacity: 1 }}>
                 problems
               </StyledLink>
             </ListItem>
             <ListItem>
-              <StyledLink to="/favorites" activeStyle={{ opacity: 1 }}>
+              <StyledLink to={`${path}/favorites`} activeStyle={{ opacity: 1 }}>
                 favorites
               </StyledLink>
             </ListItem>
             <ListItem>
-              <StyledLink to={"/profile"} activeStyle={{ opacity: 1 }}>
+              <StyledLink to={`${path}/profile`} activeStyle={{ opacity: 1 }}>
                 profile
               </StyledLink>
             </ListItem>
