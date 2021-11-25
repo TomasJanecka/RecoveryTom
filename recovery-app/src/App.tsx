@@ -1,12 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./App.css";
-import ReactGA, { ga } from "react-ga";
-import {
-  BrowserRouter as Router,
-  Route,
-  Switch,
-  useLocation,
-} from "react-router-dom";
+import ReactGA from "react-ga";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { Muscles } from "./containers/Muscles";
 import { Home } from "./containers/Home";
 import { Exercises } from "./containers/Exercises";

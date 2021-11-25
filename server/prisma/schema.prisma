@@ -44,13 +44,16 @@ model UserFavProblem {
 }
 
 model Body {
-  user     User   @relation(fields: [userID], references: [id])
-  userID   String @id @db.VarChar(128)
-  bmr      Int    @default(0) @db.Integer
-  proteins Int    @default(0) @db.Integer
-  carbs    Int    @default(0) @db.Integer
-  fats     Int    @default(0) @db.Integer
-  kg       Int    @default(0) @db.Integer
+  user        User   @relation(fields: [userID], references: [id])
+  userID      String @id @db.VarChar(128)
+  bmr         Int    @default(0) @db.Integer
+  proteins    Int    @default(0) @db.Integer
+  carbs       Int    @default(0) @db.Integer
+  fats        Int    @default(0) @db.Integer
+  actProteins Int    @default(0) @db.Integer
+  actCarbs    Int    @default(0) @db.Integer
+  actFats     Int    @default(0) @db.Integer
+  kg          Int    @default(0) @db.Integer
 }
 
 model Muscle {
