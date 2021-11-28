@@ -1,25 +1,32 @@
 import styled from "styled-components";
 import React, { useState } from "react";
-import { UsersNavigation } from "../navigation/UsersNavigation";
-import { Backdrop } from "../UI/Backdrop";
+import UsersNavigation from "../navigation/UsersNavigation";
+import { Card } from "../components/card";
+import { MCard } from "../@types/models";
+import { useSwipeable } from "react-swipeable";
 
 const StyledUserMenu = styled.div`
   width: 90vw;
   height: 100vh;
-  position: relative;
-  float: right;
-  z-index: 300;
+  float: left;
+  z-index: 1000;
 
   background-color: cadetblue;
 `;
 
-export const User: React.FC<{
+const User: React.FC<{
   showUserNavbar: boolean;
   toggleUserNavbar: () => void;
 }> = (props) => {
+  console.log("user");
+
+  const handlers = useSwipeable({
+    onSwipedRight: () => props.toggleUserNavbar(),
+  });
+
   return (
-    <StyledUserMenu>
-      <Backdrop show={props.showUserNavbar} cancel={props.toggleUserNavbar} />
+    <StyledUserMenu {...handlers}>
+      <Card imageUrl={""} height={MCard.large} width={MCard.large} />
       <UsersNavigation
         showUserNavbar={props.showUserNavbar}
         toggleUserNavbar={props.toggleUserNavbar}
@@ -27,3 +34,5 @@ export const User: React.FC<{
     </StyledUserMenu>
   );
 };
+
+export default React.memo(User);

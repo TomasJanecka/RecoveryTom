@@ -1,11 +1,11 @@
 import {
+  ECommentType,
+  EExerciseDifficulty,
+  EExerciseType,
   EJoint,
-  EMuscleID,
   EMuscleCondition,
   EMuscleGroup,
-  EExerciseDifficulty,
-  ECommentType,
-  EExerciseType,
+  EMuscleID,
 } from "./enums";
 
 export interface IUser {

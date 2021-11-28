@@ -8,12 +8,6 @@ import { SideButton } from "./SideButton";
 export const NavigationBar: React.FC<{ toggleUserNavbar: () => void }> = (
   props
 ) => {
-  const [isOpen, setIsOpen] = useState(false);
-
-  const openUserMenu = () => {
-    setIsOpen(!isOpen);
-  };
-
   return (
     <Fragment>
       <StyledNavigationBar>
@@ -55,7 +49,7 @@ const StyledNavigationBar = styled.nav`
   height: 10vh;
   position: fixed;
   bottom: 0;
-  z-index: 200;
+  z-index: 900;
 
   background-color: ${(props) => props.theme.colors.main};
   border-radius: 20px 20px 0 0;

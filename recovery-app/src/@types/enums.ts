@@ -1,3 +1,9 @@
+export enum ECardType {
+  SMALL,
+  MEDIUM,
+  LARGE,
+}
+
 export enum EMuscleCondition {
   GOOD,
   WEAK,
@@ -27,7 +33,6 @@ export enum ECommentType {
 
 export enum EJoint {
   HEAD,
-  SHOULDER_CENTER,
   SHOULDER_CENTER,
   SHOULDER,
   ELBOW,

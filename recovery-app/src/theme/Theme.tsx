@@ -4,7 +4,12 @@ import { ThemeProvider } from "styled-components";
 const defaultTheme = {
   fontSize: "16px",
   fonts: ["sans-serif", "Roboto"],
-  userWidth: "90vw",
+  border: "20px",
+  card: {
+    small: "2rem",
+    medium: "4rem",
+    large: "8rem",
+  },
 };
 
 const theme = {

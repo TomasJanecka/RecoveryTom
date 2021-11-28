@@ -9,7 +9,7 @@ const StyledSideButton = styled.div`
   right: 10px;
   bottom: 10vh;
   background-color: black;
-  z-index: 500;
+  z-index: 10000;
   border-radius: 50%;
 `;
 
