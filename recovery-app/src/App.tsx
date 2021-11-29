@@ -43,7 +43,7 @@ function App() {
     <Theme darkMode={userInfo.darkMode}>
       <Router>
         <StyledApp>
-          {/*{userInfo.loggedIn || <UserCheck />}*/}
+          {userInfo.loggedIn || <UserCheck />}
           <DefaultPage />
         </StyledApp>
       </Router>
