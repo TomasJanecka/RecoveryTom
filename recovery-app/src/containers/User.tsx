@@ -8,8 +8,10 @@ import { useSwipeable } from "react-swipeable";
 const StyledUserMenu = styled.div`
   width: 90vw;
   height: 100vh;
-  float: left;
   z-index: 1000;
+  position: fixed;
+  right: 0;
+  top: 0;
 
   background-color: cadetblue;
 `;
@@ -27,10 +29,7 @@ const User: React.FC<{
   return (
     <StyledUserMenu {...handlers}>
       <Card imageUrl={""} height={MCard.large} width={MCard.large} />
-      <UsersNavigation
-        showUserNavbar={props.showUserNavbar}
-        toggleUserNavbar={props.toggleUserNavbar}
-      />
+      <UsersNavigation toggleUserNavbar={props.toggleUserNavbar} />
     </StyledUserMenu>
   );
 };

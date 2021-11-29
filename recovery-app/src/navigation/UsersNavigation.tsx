@@ -8,43 +8,41 @@ import { Profile } from "../containers/Profile";
 import { Favorites } from "../containers/Favorites";
 
 const UsersNavigation: React.FC<{
-  showUserNavbar: boolean;
   toggleUserNavbar: () => void;
 }> = (props) => {
   const { path, url } = useRouteMatch();
 
   return (
     <>
-      {props.showUserNavbar && (
-        <StyledNavigationBar>
-          <MenuList>
-            <ListItem>
-              <StyledLink
-                exact
-                to={`${url}/messages`}
-                activeStyle={{ opacity: 1 }}
-              >
-                messages
-              </StyledLink>
-            </ListItem>
-            <ListItem>
-              <StyledLink to={`${url}/problems`} activeStyle={{ opacity: 1 }}>
-                problems
-              </StyledLink>
-            </ListItem>
-            <ListItem>
-              <StyledLink to={`${url}/favorites`} activeStyle={{ opacity: 1 }}>
-                favorites
-              </StyledLink>
-            </ListItem>
-            <ListItem>
-              <StyledLink to={`${url}/profile`} activeStyle={{ opacity: 1 }}>
-                profile
-              </StyledLink>
-            </ListItem>
-          </MenuList>
-        </StyledNavigationBar>
-      )}
+      <StyledNavigationBar>
+        <MenuList>
+          <ListItem>
+            <StyledLink
+              exact
+              to={`${url}/messages`}
+              activeStyle={{ opacity: 1 }}
+            >
+              messages
+            </StyledLink>
+          </ListItem>
+          <ListItem>
+            <StyledLink to={`${url}/problems`} activeStyle={{ opacity: 1 }}>
+              problems
+            </StyledLink>
+          </ListItem>
+          <ListItem>
+            <StyledLink to={`${url}/favorites`} activeStyle={{ opacity: 1 }}>
+              favorites
+            </StyledLink>
+          </ListItem>
+          <ListItem>
+            <StyledLink to={`${url}/profile`} activeStyle={{ opacity: 1 }}>
+              profile
+            </StyledLink>
+          </ListItem>
+        </MenuList>
+      </StyledNavigationBar>
+
       <Switch>
         <Route path={`${path}/messages`}>
           <Messages />

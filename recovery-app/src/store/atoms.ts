@@ -6,7 +6,7 @@ export const user = atom({
   key: "user",
   default: {
     id: 109393565192571700735,
-    loggedIn: true,
+    loggedIn: false,
     darkMode: true,
   },
 });

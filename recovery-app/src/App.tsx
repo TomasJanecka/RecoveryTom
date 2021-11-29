@@ -7,6 +7,7 @@ import styled from "styled-components";
 import { useRecoilState } from "recoil";
 import { user } from "./store/atoms";
 import { DefaultPage } from "./containers/DefaultPage";
+import { UserCheck } from "./components/UserCheck";
 
 const TRACKING_ID = "G-WM9B8LTMQ2";
 
@@ -18,6 +19,13 @@ const StyledApp = styled.div<{ theme: any }>`
 
 function App() {
   const [userInfo] = useRecoilState(user);
+  const [input, setInput] = useState();
+
+  // console.log(userInfo);
+
+  // const handleChange(event: any): any => {
+  //
+  // }
 
   // function usePageViews() {
   //   let location = useLocation();
@@ -35,6 +43,7 @@ function App() {
     <Theme darkMode={userInfo.darkMode}>
       <Router>
         <StyledApp>
+          {/*{userInfo.loggedIn || <UserCheck />}*/}
           <DefaultPage />
         </StyledApp>
       </Router>
