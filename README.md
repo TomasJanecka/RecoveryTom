@@ -1,9 +1,23 @@
 RecoveryTom project with own backend.
 This version contains initial thoughts of project and the actual state of the app will much differ than the final one.
 It was used mainly to learn relational database, GoogleOAuth and the connection between backend and frontend.
-Frontend is not done at all.
+Frontend is not working well. \
+This project will be replaced later by recovery-tom-dev.
 
-<ul>Used technologies
-<li>ReactJS</li>
- </ul>
+# Used technologies
+- ReactJS
+- Typescript
+- Recoil
+- Styled-components: [theme](https://github.com/TomasJanecka/RecoveryTom/blob/main/recovery-app/src/theme/Theme.tsx)
+- Postgres
+- Prisma: [schema](https://github.com/TomasJanecka/RecoveryTom/blob/main/server/prisma/schema.prisma)
+- express: [usage](https://github.com/TomasJanecka/RecoveryTom/blob/main/server/api/routes/user.ts)
+- SWR
 
+The databse run localy on docker
+
+# Run the project
+npm start
+
+# Database
+Full database insight and the main point of interest: [insight](https://github.com/TomasJanecka/RecoveryTom/blob/main/database/database-full.png)
