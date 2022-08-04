@@ -20,4 +20,4 @@ The databse run localy on docker
 npm start
 
 # Database
-Full database insight and the main point of interest: [insight](https://github.com/TomasJanecka/RecoveryTom/blob/main/database/database-full.png)
+Full database insight and the main point of interest made by PlantUML: [insight](https://github.com/TomasJanecka/RecoveryTom/blob/main/database/database-full.png)
