@@ -1,9 +1,6 @@
 # RecoveryTom
-RecoveryTom project with own backend.
-This version contains initial thoughts of project and the actual state of the app will much differ than the final one.
-It was used mainly to learn relational database, GoogleOAuth and the connection between backend and frontend.
-Frontend is not working well and the code is very elaborate and its development is no longer being continued. \
-Project will be replaced later by recovery-tom-dev.
+RecoveryTom project with its own backend. This version is the initial idea of the project and the actual state of the app differs greatly to the final one. This project was used mainly to learn relational database, GoogleOAuth and the connection between backend and frontend. Frontend is not working well and the code is quite elaborate, its development is currently uncontinued.
+Project will be later fully replaced by recovery-tom-dev.
 
 # Used technologies
 - ReactJS
