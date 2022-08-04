@@ -3,6 +3,7 @@ This version contains initial thoughts of project and the actual state of the ap
 It was used mainly to learn relational database, GoogleOAuth and the connection between backend and frontend.
 Frontend is not done at all.
 
-<b>Used technologies</b>
-
+<ul>Used technologies
+<li>ReactJS</li>
+ </ul>
 
